@@ -1,24 +1,44 @@
 using UnityEngine;
 
+using UnityEngine;
+
 public class Gate : MonoBehaviour
 {
     [Header("Gate Settings")]
     public int maxHealth = 200;
     public int currentHealth;
 
+    private SimpleHealthBar healthBar;
+
     void Start()
     {
         currentHealth = maxHealth;
+
+        // Находим HealthBar автоматически
+        healthBar = GetComponentInChildren<SimpleHealthBar>();
+        if (healthBar == null)
+        {
+            Debug.LogError("HealthBar not found on Gate!");
+        }
+        else
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+
         Debug.Log("Ворота созданы. HP: " + currentHealth);
     }
 
-    // Ворота получают урон от врагов
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         Debug.Log("Ворота получили урон: " + damage + ". Осталось HP: " + currentHealth);
 
-        // Эффект при получении урона
+        // Обновляем HealthBar
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+
         StartCoroutine(DamageFlash());
 
         if (currentHealth <= 0)

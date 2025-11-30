@@ -12,19 +12,19 @@ public class PathManager : MonoBehaviour
         Instance = this;
         CollectWaypoints();
     }
-
     void CollectWaypoints()
     {
         waypoints.Clear();
         foreach (Transform child in transform)
         {
-            if (child.name.StartsWith("Waypoint"))
+            // »щем все объекты с "Waypoint" в имени
+            if (child.name.Contains("Waypoint"))
             {
                 waypoints.Add(child);
             }
         }
 
-        // —ортируем по имени чтобы Waypoint_1, Waypoint_2 и т.д.
+        // —ортируем по имени
         waypoints.Sort((a, b) => a.name.CompareTo(b.name));
     }
 

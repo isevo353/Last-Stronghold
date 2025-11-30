@@ -7,6 +7,7 @@ public class TestEnemy : MonoBehaviour
     private List<Transform> waypoints;
     private int currentWaypointIndex = 0;
     public float speed = 2f;
+    public float startDelay = 0f; // ДОБАВИЛ ТОЛЬКО ЭТУ СТРОЧКУ
 
     [Header("Combat")]
     public int maxHealth = 100;
@@ -17,16 +18,36 @@ public class TestEnemy : MonoBehaviour
     private Gate targetGate;
     private float lastAttackTime;
     private bool isAttacking = false;
+    private bool canMove = false; // ДОБАВИЛ ТОЛЬКО ЭТУ СТРОЧКУ
 
     void Start()
     {
         waypoints = PathManager.Instance.GetWaypoints();
         transform.position = waypoints[0].position;
         currentHealth = maxHealth;
+
+        // ДОБАВИЛ ТОЛЬКО ЭТИ 4 СТРОЧКИ
+        if (startDelay > 0)
+        {
+            StartCoroutine(StartMovingAfterDelay());
+        }
+        else
+        {
+            canMove = true;
+        }
+    }
+
+    // ДОБАВИЛ ТОЛЬКО ЭТОТ МЕТОД
+    System.Collections.IEnumerator StartMovingAfterDelay()
+    {
+        yield return new WaitForSeconds(startDelay);
+        canMove = true;
     }
 
     void Update()
     {
+        if (!canMove) return; // ДОБАВИЛ ТОЛЬКО ЭТУ ПРОВЕРКУ
+
         if (!isAttacking)
         {
             MoveAlongPath();
@@ -37,6 +58,7 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
+    // ВСЁ ОСТАЛЬНОЕ БЕЗ ИЗМЕНЕНИЙ
     void MoveAlongPath()
     {
         if (currentWaypointIndex < waypoints.Count)
@@ -55,14 +77,12 @@ public class TestEnemy : MonoBehaviour
         }
         else
         {
-            // Достиг конца пути - ищем ворота для атаки
             FindGateAtEnd();
         }
     }
 
     void FindGateAtEnd()
     {
-        // Ищем ворота в конце пути
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1f);
         foreach (var collider in colliders)
         {
@@ -80,7 +100,6 @@ public class TestEnemy : MonoBehaviour
     {
         if (targetGate != null)
         {
-            // Атакуем ворота
             if (Time.time >= lastAttackTime + attackCooldown)
             {
                 targetGate.TakeDamage(damageToGate);
@@ -94,7 +113,6 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    // Вызывается когда враг получает урон (пока не от кого, но пусть будет)
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
