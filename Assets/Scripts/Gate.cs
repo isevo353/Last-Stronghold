@@ -41,7 +41,10 @@ public class Gate : MonoBehaviour
 
     void DestroyGate()
     {
-        Debug.Log("Ворота разрушены!");
+        Debug.Log("Ворота уничтожены!");
+        if (GameManager.Instance != null) 
+            GameManager.Instance.TakeLives(1);
         Destroy(gameObject);
     }
+
 }
