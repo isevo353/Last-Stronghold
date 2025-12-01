@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2393422079004039799}
   - component: {fileID: 3089719721941748257}
   - component: {fileID: 707617188127230522}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: OrcHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 1749364947161732111}
   - component: {fileID: 2559417270499052892}
   - component: {fileID: 6269287447781733748}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6852229930439126931}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 8666728623072558191}
   - component: {fileID: 1409005533586328301}
   - component: {fileID: 56862541848858652}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4557248575607578024}
   - component: {fileID: 1670457020971171324}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: HealthSLider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 4590231169456257995}
   - component: {fileID: 7975747851100977196}
   - component: {fileID: 7768792031879112291}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: orc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,11 +495,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3302adc835d5e742b3434327df9ac43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestEnemy
-  speed: 4
+  speed: 1
   startDelay: 0
   maxHealth: 100
   damageToGate: 20
   attackCooldown: 1
+  healthBar: {fileID: 707617188127230522}
+  isDead: 0
 --- !u!114 &7768792031879112291
 MonoBehaviour:
   m_ObjectHideFlags: 0

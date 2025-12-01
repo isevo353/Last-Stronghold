@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TestEnemy : MonoBehaviour
@@ -7,38 +8,55 @@ public class TestEnemy : MonoBehaviour
     private List<Transform> waypoints;
     private int currentWaypointIndex = 0;
     public float speed = 2f;
-    public float startDelay = 0f; // ������� ������ ��� �������
+    public float startDelay = 0f; // ← ДОБАВИЛ ЭТО!
 
     [Header("Combat")]
     public int maxHealth = 100;
+    public int currentHealth;
+    public SimpleHealthBar healthBar;
+
+    [Header("Attack")]
     public int damageToGate = 20;
     public float attackCooldown = 1f;
-
-    private int currentHealth;
     private Gate targetGate;
     private float lastAttackTime;
     private bool isAttacking = false;
-    private bool canMove = false; // ������� ������ ��� �������
+    private bool canMove = true;
 
     void Start()
     {
-        waypoints = PathManager.Instance.GetWaypoints();
-        transform.position = waypoints[0].position;
-        currentHealth = maxHealth;
-
-        // ������� ������ ��� 4 �������
+        // Задержка старта
         if (startDelay > 0)
         {
-            StartCoroutine(StartMovingAfterDelay());
+            canMove = false;
+            StartCoroutine(StartDelay());
         }
-        else
+
+        // Движение
+        waypoints = PathManager.Instance.GetWaypoints();
+        if (waypoints != null && waypoints.Count > 0)
         {
-            canMove = true;
+            transform.position = waypoints[0].position;
         }
+
+        // Здоровье
+        currentHealth = maxHealth;
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+
+        // Коллайдер
+        if (GetComponent<Collider2D>() == null)
+        {
+            gameObject.AddComponent<CircleCollider2D>().radius = 0.5f;
+        }
+
+        // Слой
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
     }
 
-    // ������� ������ ���� �����
-    System.Collections.IEnumerator StartMovingAfterDelay()
+    IEnumerator StartDelay()
     {
         yield return new WaitForSeconds(startDelay);
         canMove = true;
@@ -46,44 +64,34 @@ public class TestEnemy : MonoBehaviour
 
     void Update()
     {
-        if (!canMove) return; // ������� ������ ��� ��������
+        if (!canMove) return;
+        Move();
+    }
 
-        if (!isAttacking)
+    void Move()
+    {
+        if (waypoints == null || currentWaypointIndex >= waypoints.Count)
         {
-            MoveAlongPath();
+            FindGate();
+            return;
         }
-        else
+
+        Transform target = waypoints[currentWaypointIndex];
+        transform.position = Vector2.MoveTowards(
+            transform.position,
+            target.position,
+            speed * Time.deltaTime
+        );
+
+        if (Vector2.Distance(transform.position, target.position) < 0.1f)
         {
-            AttackGate();
+            currentWaypointIndex++;
         }
     }
 
-    // �Ѩ ��������� ��� ���������
-    void MoveAlongPath()
+    void FindGate()
     {
-        if (currentWaypointIndex < waypoints.Count)
-        {
-            Transform target = waypoints[currentWaypointIndex];
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                target.position,
-                speed * Time.deltaTime
-            );
-
-            if (Vector2.Distance(transform.position, target.position) < 0.1f)
-            {
-                currentWaypointIndex++;
-            }
-        }
-        else
-        {
-
-            FindGateAtEnd();
-        }
-    }
-
-    void FindGateAtEnd()
-    {
+        if (isAttacking) return;
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1f);
         foreach (var collider in colliders)
@@ -98,31 +106,34 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    void AttackGate()
+    void FixedUpdate()
     {
-        if (targetGate != null)
+        if (isAttacking && targetGate != null)
         {
-
-            if (Time.time >= lastAttackTime + attackCooldown)
-            {
-                targetGate.TakeDamage(damageToGate);
-                lastAttackTime = Time.time;
-                Debug.Log("Враг атакует ворота! Урон: " + damageToGate);
-            }
-        }
-        else
-        {
-            isAttacking = false;
+            AttackGate();
         }
     }
 
+    void AttackGate()
+    {
+        if (Time.time >= lastAttackTime + attackCooldown)
+        {
+            targetGate.TakeDamage(damageToGate);
+            lastAttackTime = Time.time;
+        }
+    }
 
     public void TakeDamage(int damage)
     {
-        if (currentHealth <= 0) return; // ← если уже мёртв, больше урона не берём
+        if (currentHealth <= 0) return;
 
         currentHealth -= damage;
-        Debug.Log("Враг получил урон: " + damage + ". Осталось HP: " + currentHealth);
+        Debug.Log("ОРК получил " + damage + " урона! Осталось: " + currentHealth);
+
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
 
         if (currentHealth <= 0)
         {
@@ -130,19 +141,30 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-
     void Die()
     {
-        Debug.Log("Враг мёртв!");
+        Debug.Log("Орк умер!");
 
-        gameObject.SetActive(false); // ← отключаем объект до удаления
+        // Отключаем всё
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
 
+        if (healthBar != null)
+            healthBar.gameObject.SetActive(false);
+
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        if (sprite != null) sprite.enabled = false;
+
+        // Деньги
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.AddMoney(5);
-        }
 
-        Destroy(gameObject);
+        Destroy(gameObject, 0.2f);
     }
 
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 1f);
+    }
 }
