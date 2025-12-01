@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class TestEnemy : MonoBehaviour
@@ -7,7 +7,7 @@ public class TestEnemy : MonoBehaviour
     private List<Transform> waypoints;
     private int currentWaypointIndex = 0;
     public float speed = 2f;
-    public float startDelay = 0f; // ÄÎÁÀÂÈË ÒÎËÜÊÎ İÒÓ ÑÒĞÎ×ÊÓ
+    public float startDelay = 0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("Combat")]
     public int maxHealth = 100;
@@ -18,7 +18,7 @@ public class TestEnemy : MonoBehaviour
     private Gate targetGate;
     private float lastAttackTime;
     private bool isAttacking = false;
-    private bool canMove = false; // ÄÎÁÀÂÈË ÒÎËÜÊÎ İÒÓ ÑÒĞÎ×ÊÓ
+    private bool canMove = false; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class TestEnemy : MonoBehaviour
         transform.position = waypoints[0].position;
         currentHealth = maxHealth;
 
-        // ÄÎÁÀÂÈË ÒÎËÜÊÎ İÒÈ 4 ÑÒĞÎ×ÊÈ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (startDelay > 0)
         {
             StartCoroutine(StartMovingAfterDelay());
@@ -37,7 +37,7 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    // ÄÎÁÀÂÈË ÒÎËÜÊÎ İÒÎÒ ÌÅÒÎÄ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
     System.Collections.IEnumerator StartMovingAfterDelay()
     {
         yield return new WaitForSeconds(startDelay);
@@ -46,7 +46,7 @@ public class TestEnemy : MonoBehaviour
 
     void Update()
     {
-        if (!canMove) return; // ÄÎÁÀÂÈË ÒÎËÜÊÎ İÒÓ ÏĞÎÂÅĞÊÓ
+        if (!canMove) return; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         if (!isAttacking)
         {
@@ -58,7 +58,7 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    // ÂÑ¨ ÎÑÒÀËÜÍÎÅ ÁÅÇ ÈÇÌÅÍÅÍÈÉ
+    // ï¿½Ñ¨ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void MoveAlongPath()
     {
         if (currentWaypointIndex < waypoints.Count)
@@ -77,12 +77,14 @@ public class TestEnemy : MonoBehaviour
         }
         else
         {
+
             FindGateAtEnd();
         }
     }
 
     void FindGateAtEnd()
     {
+
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1f);
         foreach (var collider in colliders)
         {
@@ -100,11 +102,12 @@ public class TestEnemy : MonoBehaviour
     {
         if (targetGate != null)
         {
+
             if (Time.time >= lastAttackTime + attackCooldown)
             {
                 targetGate.TakeDamage(damageToGate);
                 lastAttackTime = Time.time;
-                Debug.Log("Âğàã àòàêóåò âîğîòà! Óğîí: " + damageToGate);
+                Debug.Log("Ğ’Ñ€Ğ°Ğ³ Ğ°Ñ‚Ğ°ĞºÑƒĞµÑ‚ Ğ²Ğ¾Ñ€Ğ¾Ñ‚Ğ°! Ğ£Ñ€Ğ¾Ğ½: " + damageToGate);
             }
         }
         else
@@ -113,10 +116,13 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
+
     public void TakeDamage(int damage)
     {
+        if (currentHealth <= 0) return; // â† ĞµÑĞ»Ğ¸ ÑƒĞ¶Ğµ Ğ¼Ñ‘Ñ€Ñ‚Ğ², Ğ±Ğ¾Ğ»ÑŒÑˆĞµ ÑƒÑ€Ğ¾Ğ½Ğ° Ğ½Ğµ Ğ±ĞµÑ€Ñ‘Ğ¼
+
         currentHealth -= damage;
-        Debug.Log("Âğàã ïîëó÷èë óğîí: " + damage + ". Îñòàëîñü HP: " + currentHealth);
+        Debug.Log("Ğ’Ñ€Ğ°Ğ³ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ¸Ğ» ÑƒÑ€Ğ¾Ğ½: " + damage + ". ĞÑÑ‚Ğ°Ğ»Ğ¾ÑÑŒ HP: " + currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -124,9 +130,19 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
+
     void Die()
     {
-        Debug.Log("Âğàã óìåğ!");
+        Debug.Log("Ğ’Ñ€Ğ°Ğ³ Ğ¼Ñ‘Ñ€Ñ‚Ğ²!");
+
+        gameObject.SetActive(false); // â† Ğ¾Ñ‚ĞºĞ»ÑÑ‡Ğ°ĞµĞ¼ Ğ¾Ğ±ÑŠĞµĞºÑ‚ Ğ´Ğ¾ ÑƒĞ´Ğ°Ğ»ĞµĞ½Ğ¸Ñ
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddMoney(5);
+        }
+
         Destroy(gameObject);
     }
+
 }
