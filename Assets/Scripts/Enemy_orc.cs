@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 
 public class TestEnemy : MonoBehaviour
@@ -55,14 +55,14 @@ public class TestEnemy : MonoBehaviour
         }
         else
         {
-            // Достиг конца пути - ищем ворота для атаки
+            // Р”РѕСЃС‚РёРі РєРѕРЅС†Р° РїСѓС‚Рё - РёС‰РµРј РІРѕСЂРѕС‚Р° РґР»СЏ Р°С‚Р°РєРё
             FindGateAtEnd();
         }
     }
 
     void FindGateAtEnd()
     {
-        // Ищем ворота в конце пути
+        // РС‰РµРј РІРѕСЂРѕС‚Р° РІ РєРѕРЅС†Рµ РїСѓС‚Рё
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1f);
         foreach (var collider in colliders)
         {
@@ -80,12 +80,12 @@ public class TestEnemy : MonoBehaviour
     {
         if (targetGate != null)
         {
-            // Атакуем ворота
+            // РђС‚Р°РєСѓРµРј РІРѕСЂРѕС‚Р°
             if (Time.time >= lastAttackTime + attackCooldown)
             {
                 targetGate.TakeDamage(damageToGate);
                 lastAttackTime = Time.time;
-                Debug.Log("Враг атакует ворота! Урон: " + damageToGate);
+                Debug.Log("Р’СЂР°Рі Р°С‚Р°РєСѓРµС‚ РІРѕСЂРѕС‚Р°! РЈСЂРѕРЅ: " + damageToGate);
             }
         }
         else
@@ -94,11 +94,13 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    // Вызывается когда враг получает урон (пока не от кого, но пусть будет)
+    // Р’С‹Р·С‹РІР°РµС‚СЃСЏ РєРѕРіРґР° РІСЂР°Рі РїРѕР»СѓС‡Р°РµС‚ СѓСЂРѕРЅ (РїРѕРєР° РЅРµ РѕС‚ РєРѕРіРѕ, РЅРѕ РїСѓСЃС‚СЊ Р±СѓРґРµС‚)
     public void TakeDamage(int damage)
     {
+        if (currentHealth <= 0) return; // в†ђ РµСЃР»Рё СѓР¶Рµ РјС‘СЂС‚РІ, Р±РѕР»СЊС€Рµ СѓСЂРѕРЅР° РЅРµ Р±РµСЂС‘Рј
+
         currentHealth -= damage;
-        Debug.Log("Враг получил урон: " + damage + ". Осталось HP: " + currentHealth);
+        Debug.Log("Р’СЂР°Рі РїРѕР»СѓС‡РёР» СѓСЂРѕРЅ: " + damage + ". РћСЃС‚Р°Р»РѕСЃСЊ HP: " + currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -106,9 +108,20 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
+
     void Die()
     {
-        Debug.Log("Враг умер!");
+        Debug.Log("Р’СЂР°Рі РјС‘СЂС‚РІ!");
+
+        gameObject.SetActive(false); // в†ђ РѕС‚РєР»СЋС‡Р°РµРј РѕР±СЉРµРєС‚ РґРѕ СѓРґР°Р»РµРЅРёСЏ
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddMoney(5);
+        }
+
         Destroy(gameObject);
     }
+
+
 }
