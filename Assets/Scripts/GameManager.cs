@@ -56,6 +56,17 @@ public class GameManager : MonoBehaviour
     {
         if (_gameOver) return;
 
+
+        if (UIManager.Instance != null && !UIManager.Instance.IsWaveActive())
+            return;
+
+        _spawnTimer += Time.deltaTime;
+        if (_spawnTimer >= spawnInterval && _enemiesSpawned < maxEnemiesOnWave)
+        {
+            _spawnTimer = 0f;
+            SpawnEnemy();
+        }
+
         // Спавн врагов
         _spawnTimer += Time.deltaTime;
         if (_spawnTimer >= spawnInterval && _enemiesSpawned < maxEnemiesOnWave)
@@ -75,6 +86,8 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+
+
     }
 
     void SpawnEnemy()
