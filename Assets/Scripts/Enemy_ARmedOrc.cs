@@ -1,14 +1,14 @@
-п»їusing System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEnemy : MonoBehaviour
+public class Enemy_ARmedOrc : MonoBehaviour
 {
     [Header("Movement")]
     private List<Transform> waypoints;
     private int currentWaypointIndex = 0;
     public float speed = 2f;
-    public float startDelay = 0f; 
+    public float startDelay = 0f;
 
     [Header("Combat")]
     public int maxHealth = 100;
@@ -25,34 +25,34 @@ public class TestEnemy : MonoBehaviour
 
     void Start()
     {
-        // Р—Р°РґРµСЂР¶РєР° СЃС‚Р°СЂС‚Р°
+        // Задержка старта
         if (startDelay > 0)
         {
             canMove = false;
             StartCoroutine(StartDelay());
         }
 
-        // Р”РІРёР¶РµРЅРёРµ
+        // Движение
         waypoints = PathManager.Instance.GetWaypoints();
         if (waypoints != null && waypoints.Count > 0)
         {
             transform.position = waypoints[0].position;
         }
 
-        // Р—РґРѕСЂРѕРІСЊРµ
+        // Здоровье
         currentHealth = maxHealth;
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
-        // РљРѕР»Р»Р°Р№РґРµСЂ
+        // Коллайдер
         if (GetComponent<Collider2D>() == null)
         {
             gameObject.AddComponent<CircleCollider2D>().radius = 0.5f;
         }
 
-        // РЎР»РѕР№
+        // Слой
         gameObject.layer = LayerMask.NameToLayer("Enemy");
     }
 
@@ -128,7 +128,7 @@ public class TestEnemy : MonoBehaviour
         if (currentHealth <= 0) return;
 
         currentHealth -= damage;
-        Debug.Log("РћР Рљ РїРѕР»СѓС‡РёР» " + damage + " СѓСЂРѕРЅР°! РћСЃС‚Р°Р»РѕСЃСЊ: " + currentHealth);
+        Debug.Log("ОРК получил " + damage + " урона! Осталось: " + currentHealth);
 
         if (healthBar != null)
         {
@@ -143,9 +143,9 @@ public class TestEnemy : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("РћСЂРє СѓРјРµСЂ!");
+        Debug.Log("Орк умер!");
 
-        // РћС‚РєР»СЋС‡Р°РµРј РІСЃС‘
+        // Отключаем всё
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
@@ -155,7 +155,7 @@ public class TestEnemy : MonoBehaviour
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         if (sprite != null) sprite.enabled = false;
 
-        // Р”РµРЅСЊРіРё
+        // Деньги
         if (GameManager.Instance != null)
             GameManager.Instance.AddMoney(5);
 

@@ -4,23 +4,23 @@ using UnityEngine.UI;
 public class SimpleHealthBar : MonoBehaviour
 {
     private Slider slider;
+    private Image fill;
 
     void Start()
     {
-        // Автоматически находим Slider на этом объекте
         slider = GetComponentInChildren<Slider>();
+        fill = slider?.fillRect?.GetComponent<Image>();
+
         if (slider == null)
-        {
-            Debug.LogError("Slider not found on " + gameObject.name);
-        }
+            Debug.LogError("Не найден Slider на HealthBar!");
     }
 
-    public void UpdateHealth(int currentHealth, int maxHealth)
+    public void UpdateHealth(float currentHealth, float maxHealth)
     {
-        if (slider != null)
-        {
-            slider.value = currentHealth;
-            slider.maxValue = maxHealth;
-        }
+        if (slider == null) return;
+
+        slider.maxValue = maxHealth;
+        slider.value = currentHealth;
+
     }
 }

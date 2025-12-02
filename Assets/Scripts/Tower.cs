@@ -18,7 +18,7 @@ public class Tower : MonoBehaviour
         TestEnemy target = FindTarget();
         if (target == null) return;
 
-     
+
 
         if (Time.time >= _lastShotTime + fireCooldown)
         {
