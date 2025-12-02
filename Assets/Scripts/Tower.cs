@@ -13,6 +13,20 @@ public class Tower : MonoBehaviour
 
     float _lastShotTime;
 
+    void Start()
+    {
+        // Если shootPoint не назначен в инспекторе - ищем автоматически
+        if (shootPoint == null)
+        {
+            shootPoint = transform.Find("shootPoint");
+
+            if (shootPoint == null)
+            {
+                Debug.LogError("shootPoint не найден! Создай дочерний объект 'ShootPoint' под Tower");
+            }
+        }
+    }
+
     void Update()
     {
         TestEnemy target = FindTarget();
