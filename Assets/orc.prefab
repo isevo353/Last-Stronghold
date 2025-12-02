@@ -498,10 +498,10 @@ MonoBehaviour:
   speed: 1
   startDelay: 0
   maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 707617188127230522}
   damageToGate: 20
   attackCooldown: 1
-  healthBar: {fileID: 707617188127230522}
-  isDead: 0
 --- !u!114 &7768792031879112291
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2252289246499835466}
   - component: {fileID: 868506902411016105}
   - component: {fileID: 654413116157575797}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Orc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,5 +106,7 @@ MonoBehaviour:
   speed: 1
   startDelay: 0
   maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 0}
   damageToGate: 20
   attackCooldown: 1
