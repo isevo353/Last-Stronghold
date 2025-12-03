@@ -23,6 +23,10 @@ public class TestEnemy : MonoBehaviour
     private bool isAttacking = false;
     private bool canMove = true;
 
+    [Header("Visual Effects")]
+    public GameObject damageTextPrefab; // Префаб текста урона
+
+
     void Start()
     {
         // Задержка старта
@@ -130,6 +134,8 @@ public class TestEnemy : MonoBehaviour
         currentHealth -= damage;
         Debug.Log("ОРК получил " + damage + " урона! Осталось: " + currentHealth);
 
+        StartCoroutine(DamageFlash()); 
+
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
@@ -138,6 +144,13 @@ public class TestEnemy : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
+        }
+        // СОЗДАНИЕ ТЕКСТА УРОНА:
+        if (damageTextPrefab != null)
+        {
+            GameObject textObj = Instantiate(damageTextPrefab, transform);
+            textObj.transform.localPosition = new Vector3(0, 1.5f, 0); // Над головой
+            textObj.GetComponent<DamagePopup>().SetDamage(damage);
         }
     }
 
@@ -169,5 +182,16 @@ public class TestEnemy : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, 1f);
+    }
+System.Collections.IEnumerator DamageFlash()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        if (sprite != null)
+        {
+            Color original = sprite.color;
+            sprite.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            sprite.color = original;
+        }
     }
 }
