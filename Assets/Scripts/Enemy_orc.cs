@@ -170,7 +170,10 @@ public class TestEnemy : MonoBehaviour
 
         // Деньги
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.AddMoney(5);
+            Debug.Log("asdasdsad");
+        }
 
         Destroy(gameObject, 0.2f);
     }
