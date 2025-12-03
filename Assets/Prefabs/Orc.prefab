@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 7975747851100977196}
   - component: {fileID: 7768792031879112291}
   m_Layer: 3
-  m_Name: orc
+  m_Name: Orc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -502,6 +502,7 @@ MonoBehaviour:
   healthBar: {fileID: 707617188127230522}
   damageToGate: 20
   attackCooldown: 1
+  damageTextPrefab: {fileID: 2224184289095968478, guid: bb7406d8a1fb332458e1d089d754a76d, type: 3}
 --- !u!114 &7768792031879112291
 MonoBehaviour:
   m_ObjectHideFlags: 0
