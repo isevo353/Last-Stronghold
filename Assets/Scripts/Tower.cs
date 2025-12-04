@@ -43,25 +43,24 @@ public class Tower : MonoBehaviour
 
     TestEnemy FindTarget()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, range, enemyLayer);
-        if (hits.Length == 0) return null;
+        // Сначала находим всех врагов по компоненту
+        TestEnemy[] allEnemies = FindObjectsOfType<TestEnemy>();
 
-        // ближайший враг
         float bestDist = Mathf.Infinity;
         TestEnemy best = null;
 
-        foreach (var h in hits)
+        foreach (TestEnemy enemy in allEnemies)
         {
-            TestEnemy e = h.GetComponent<TestEnemy>();
-            if (e == null) continue;
+            // Проверяем расстояние до центра врага
+            float d = Vector2.Distance(transform.position, enemy.transform.position);
 
-            float d = Vector2.Distance(transform.position, e.transform.position);
-            if (d < bestDist)
+            if (d <= range && d < bestDist)
             {
                 bestDist = d;
-                best = e;
+                best = enemy;
             }
         }
+
         return best;
     }
 

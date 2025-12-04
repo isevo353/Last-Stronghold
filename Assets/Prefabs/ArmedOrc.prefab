@@ -262,13 +262,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3302adc835d5e742b3434327df9ac43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestEnemy
-  speed: 2
+  speed: 1
   startDelay: 0
-  maxHealth: 100
-  currentHealth: 0
+  maxHealth: 175
+  currentHealth: 175
   healthBar: {fileID: 7137413752695249818}
   damageToGate: 20
   attackCooldown: 1
+  damageTextPrefab: {fileID: 0}
 --- !u!1 &5451458448458746028
 GameObject:
   m_ObjectHideFlags: 0

@@ -75,7 +75,7 @@ public class TowerSlot : MonoBehaviour
                 Instantiate(towerPrefab, transform.position, Quaternion.identity);
                 isOccupied = true;
                 UpdateSlotColor();
-
+                Destroy(gameObject);
                 Debug.Log($"Башня построена за {towerCost} монет!");
             }
         }

@@ -62,21 +62,6 @@ public class GameManager : MonoBehaviour
         if (UIManager.Instance != null && !UIManager.Instance.IsWaveActive())
             return;
 
-        _spawnTimer += Time.deltaTime;
-        if (_spawnTimer >= spawnInterval && _enemiesSpawned < maxEnemiesOnWave)
-        {
-            _spawnTimer = 0f;
-            SpawnEnemy();
-        }
-
-        // Спавн врагов
-        _spawnTimer += Time.deltaTime;
-        if (_spawnTimer >= spawnInterval && _enemiesSpawned < maxEnemiesOnWave)
-        {
-            _spawnTimer = 0f;
-            SpawnEnemy();
-        }
-
         // Проверка проигрыша (ворота уничтожены)
         if (targetGate == null || targetGate.currentHealth <= 0)
         {
