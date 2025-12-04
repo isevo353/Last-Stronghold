@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
             targetGate = FindObjectOfType<Gate>();
 
         Debug.Log($"[GameManager] Игра начата! Деньги: {_currentMoney}, Жизни: {_currentLives}");
+
+        Debug.Log($"[GameManager] Подсказка: Кликай на круги чтобы ставить башни (50 монет)");
     }
 
     void Update()
@@ -196,7 +198,7 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
