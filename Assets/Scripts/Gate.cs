@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Gate : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Gate : MonoBehaviour
     public int currentHealth;
 
     private SimpleHealthBar healthBar;
+    private DefeatMenu defeatMenu;
 
     void Start()
     {
@@ -21,6 +23,13 @@ public class Gate : MonoBehaviour
         else
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+
+	// Находим меню поражения в сцене
+        defeatMenu = FindObjectOfType<DefeatMenu>();
+        if (defeatMenu == null)
+        {
+            Debug.LogError("DefeatMenu не найден в сцене! Добавьте его на Canvas.");
         }
 
         Debug.Log("¬орота созданы. HP: " + currentHealth);
@@ -62,6 +71,17 @@ public class Gate : MonoBehaviour
         Debug.Log("¬орота уничтожены!");
         if (GameManager.Instance != null) 
             GameManager.Instance.TakeLives(1);
+
+	// Показываем меню поражения
+        if (defeatMenu != null)
+        {
+            defeatMenu.ShowDefeatMenu();
+        }
+        else
+        {
+            Debug.LogError("Не могу показать меню поражения: defeatMenu равен null!");
+        }
+
         Destroy(gameObject);
     }
 
