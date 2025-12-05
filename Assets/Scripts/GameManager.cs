@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -42,6 +41,7 @@ public class GameManager : MonoBehaviour
         _currentMoney = startMoney;
         _currentLives = startLives;
         _enemiesSpawned = 0;
+        _gameOver = false;
 
         if (pathManager == null)
             pathManager = FindObjectOfType<PathManager>();
