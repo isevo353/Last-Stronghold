@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Settings")]
     public int startMoney = 50;
-    public int startLives = 10;
 
     [Header("Spawning")]
     public GameObject enemyPrefab;
@@ -20,14 +19,13 @@ public class GameManager : MonoBehaviour
 
     // Game state
     private int _currentMoney;
-    private int _currentLives;
     private float _spawnTimer;
     private int _enemiesSpawned;
     private bool _gameOver = false;
 
     void Awake()
     {
-        // Синглтон
+        // ????????
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -39,7 +37,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _currentMoney = startMoney;
-        _currentLives = startLives;
         _enemiesSpawned = 0;
         _gameOver = false;
 
@@ -49,9 +46,8 @@ public class GameManager : MonoBehaviour
         if (targetGate == null)
             targetGate = FindObjectOfType<Gate>();
 
-        Debug.Log($"[GameManager] Игра начата! Деньги: {_currentMoney}, Жизни: {_currentLives}");
-
-        Debug.Log($"[GameManager] Подсказка: Кликай на круги чтобы ставить башни (50 монет)");
+        Debug.Log("[GameManager] ???? ??????! ??????: " + _currentMoney + ". HP ????? ? ? UI.");
+        Debug.Log("[GameManager] ?????????: ?????? ?? ????? ????? ??????? ????? (50 ?????)");
     }
 
     void Update()
@@ -62,26 +58,18 @@ public class GameManager : MonoBehaviour
         if (UIManager.Instance != null && !UIManager.Instance.IsWaveActive())
             return;
 
-        // Проверка проигрыша (ворота уничтожены)
+        // ????????? ?????? ????? ?????? ?????????? (HP ????? = ???????????? ???????)
         if (targetGate == null || targetGate.currentHealth <= 0)
         {
             GameOver();
         }
-
-        // Проверка проигрыша (жизни закончились)
-        if (_currentLives <= 0)
-        {
-            GameOver();
-        }
-
-
     }
 
     void SpawnEnemy()
     {
         if (enemyPrefab == null)
         {
-            Debug.LogError("[GameManager] Enemy prefab не назначен!");
+            Debug.LogError("[GameManager] Enemy prefab ?? ????????!");
             return;
         }
 
@@ -90,51 +78,37 @@ public class GameManager : MonoBehaviour
         if (enemy != null)
         {
             _enemiesSpawned++;
-            Debug.Log($"[GameManager] Враг спаунен! Всего спаунено: {_enemiesSpawned}");
+            Debug.Log($"[GameManager] ???? ???????! ????? ????????: {_enemiesSpawned}");
         }
     }
 
     /// <summary>
-    /// Попытка потратить деньги (при постройке башни)
+    /// ??????? ????????? ?????? (??? ????????? ?????)
     /// </summary>
     public bool TrySpendMoney(int amount)
     {
         if (_currentMoney < amount)
         {
-            Debug.LogWarning($"[GameManager] Недостаточно денег! Есть: {_currentMoney}, нужно: {amount}");
+            Debug.LogWarning($"[GameManager] ???????????? ?????! ????: {_currentMoney}, ?????: {amount}");
             return false;
         }
 
         _currentMoney -= amount;
-        Debug.Log($"[GameManager] Потрачено {amount} денег. Осталось: {_currentMoney}");
+        Debug.Log($"[GameManager] ????????? {amount} ?????. ????????: {_currentMoney}");
         return true;
     }
 
     /// <summary>
-    /// Добавить деньги (при убийстве врага)
+    /// ???????? ?????? (??? ???????? ?????)
     /// </summary>
     public void AddMoney(int amount)
     {
         _currentMoney += amount;
-        Debug.Log($"[GameManager] +{amount} денег! Всего: {_currentMoney}");
+        Debug.Log($"[GameManager] +{amount} ?????! ?????: {_currentMoney}");
     }
 
     /// <summary>
-    /// Потерять жизнь (враг дошёл до ворот)
-    /// </summary>
-    public void TakeLives(int amount)
-    {
-        _currentLives -= amount;
-        Debug.Log($"[GameManager] -{amount} жизней! Осталось: {_currentLives}");
-
-        if (_currentLives <= 0)
-        {
-            GameOver();
-        }
-    }
-
-    /// <summary>
-    /// Получить текущее количество денег
+    /// ???????? ??????? ?????????? ?????.
     /// </summary>
     public int GetMoney()
     {
@@ -142,27 +116,16 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Получить текущее количество жизней
-    /// </summary>
-    public int GetLives()
-    {
-        return _currentLives;
-    }
-
-    /// <summary>
-    /// Завершить игру (поражение)
+    /// ????????? ???? (?????????). ???????/???? ? ?????? ????? DefeatMenu.
     /// </summary>
     void GameOver()
     {
         _gameOver = true;
         Debug.Log("[GameManager] GAME OVER!");
-        // Здесь можно показать UI экран поражения
-        // или перезагрузить сцену через пару секунд
-        Invoke(nameof(RestartLevel), 2f);
     }
 
     /// <summary>
-    /// Перезагрузить уровень
+    /// ????????????? ???????
     /// </summary>
     public void RestartLevel()
     {
@@ -170,15 +133,15 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Выход в главное меню (если есть)
+    /// ????? ? ??????? ???? (???? ????)
     /// </summary>
     public void BackToMenu()
     {
-        SceneManager.LoadScene(0); // или имя сцены меню
+        SceneManager.LoadScene(0); // ??? ??? ????? ????
     }
 
     /// <summary>
-    /// Выход из игры
+    /// ????? ?? ????
     /// </summary>
     public void QuitGame()
     {

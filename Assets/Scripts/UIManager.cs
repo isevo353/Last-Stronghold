@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -91,8 +91,8 @@ public class UIManager : MonoBehaviour
         if (moneyText != null)
             moneyText.text = "Монеты: " + GameManager.Instance.GetMoney();
 
-        if (livesText != null)
-            livesText.text = "Жизни: " + gate.currentHealth;
+        if (livesText != null && gate != null)
+            livesText.text = "HP ворот: " + gate.currentHealth;
 
         if (waveText != null)
             waveText.text = "Волна: " + _currentWave;
