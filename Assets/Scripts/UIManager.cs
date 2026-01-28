@@ -37,7 +37,16 @@ public class UIManager : MonoBehaviour
         if (startWaveButton != null)
             startWaveButton.onClick.AddListener(OnStartWavePressed);
 
+        if (enemySpawner != null)
+            enemySpawner.onWaveFinished += EndWave;
+
         UpdateUI();
+    }
+
+    void OnDestroy()
+    {
+        if (enemySpawner != null)
+            enemySpawner.onWaveFinished -= EndWave;
     }
 
     void Update()
@@ -52,6 +61,10 @@ public class UIManager : MonoBehaviour
             Debug.Log("[UIManager] Волна уже начата!");
             return;
         }
+        if (PauseMenuController.IsPaused)
+        {
+            return;
+        }
 
         _currentWave++;
         _waveActive = true;
@@ -60,14 +73,10 @@ public class UIManager : MonoBehaviour
 
         Debug.Log($"[UIManager] Начата волна {_currentWave}!");
 
-        // Запускаем спавнер
         if (enemySpawner != null)
-        {
             enemySpawner.StartSpawning();
-        }
 
-        // Волна длится 15 секунд, потом можно начать новую
-        Invoke(nameof(EndWave), 15f);
+        // Конец волны — по событию от спавнера (когда отспавнятся все враги), не по таймеру
     }
 
     void EndWave()
@@ -96,6 +105,10 @@ public class UIManager : MonoBehaviour
 
         if (waveText != null)
             waveText.text = "Волна: " + _currentWave;
+
+        // Кнопка «Начать волну» недоступна на паузе
+        if (startWaveButton != null && !_waveActive)
+            startWaveButton.interactable = !PauseMenuController.IsPaused;
     }
 
     public bool IsWaveActive()

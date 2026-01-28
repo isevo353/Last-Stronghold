@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 using System.Collections;
 
 public class EnemySpawner : MonoBehaviour
@@ -15,6 +16,9 @@ public class EnemySpawner : MonoBehaviour
 
     private Coroutine _spawnCoroutine;
     private bool _isSpawning = false;
+
+    /// <summary> Вызывается, когда волна полностью отспавнена (все бронированные + обычные). </summary>
+    public Action onWaveFinished;
 
     void Start()
     {
@@ -53,13 +57,12 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        int normalCount = waveNumber;
-        int armoredCount = waveNumber;
-
-        normalCount += baseNormalEnemies - 1;
-        armoredCount += baseArmoredEnemies - 1;
+        int normalCount = waveNumber + (baseNormalEnemies - 1);
+        int armoredCount = waveNumber + (baseArmoredEnemies - 1);
 
         Debug.Log($"[EnemySpawner] Волна {waveNumber}: {normalCount} обычных, {armoredCount} бронированных");
+
+        PrepareNextWave();
 
         // 1. Сначала спавним всех бронированных орков
         for (int i = 0; i < armoredCount; i++)
@@ -92,10 +95,9 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _isSpawning = false;
-
-        // Готовим следующую волну
-        PrepareNextWave();
-        Debug.Log($"[EnemySpawner] Волна {waveNumber} закончена!");
+        Debug.Log($"[EnemySpawner] Волна закончена! Следующая: {waveNumber}");
+        yield return null;
+        onWaveFinished?.Invoke();
     }
 
     /// <summary>
