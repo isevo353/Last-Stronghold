@@ -14,7 +14,7 @@ public class Gate : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        // Находим HealthBar автоматически
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ HealthBar пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         healthBar = GetComponentInChildren<SimpleHealthBar>();
         if (healthBar == null)
         {
@@ -25,22 +25,22 @@ public class Gate : MonoBehaviour
             healthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
-	// Ќаходим меню поражениЯ в сцене
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
         defeatMenu = FindObjectOfType<DefeatMenu>();
         if (defeatMenu == null)
         {
-            Debug.LogError("DefeatMenu не найден в сцене! „обавьте его на Canvas.");
+            Debug.LogError("DefeatMenu пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ! пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ Canvas.");
         }
 
-        Debug.Log("Ворота созданы. HP: " + currentHealth);
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. HP: " + currentHealth);
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log("Ворота получили урон: " + damage + ". Осталось HP: " + currentHealth);
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ: " + damage + ". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HP: " + currentHealth);
 
-        // Обновляем HealthBar
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HealthBar
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
@@ -69,7 +69,7 @@ public class Gate : MonoBehaviour
     void DestroyGate()
     {
         Debug.Log("?????? ??????????!");
-        // HP ????? ? ???????????? «?????»; ???????/???? ?????? ????? DefeatMenu
+        // HP ????? ? ???????????? пїЅ?????пїЅ; ???????/???? ?????? ????? DefeatMenu
 
         // ?????????? ???? ?????????
         if (defeatMenu != null)
@@ -78,7 +78,7 @@ public class Gate : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Ќе могу показать меню поражениЯ: defeatMenu равен null!");
+            Debug.LogError("пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: defeatMenu пїЅпїЅпїЅпїЅпїЅ null!");
         }
 
         Destroy(gameObject);
