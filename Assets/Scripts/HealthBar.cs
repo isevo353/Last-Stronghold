@@ -3,24 +3,25 @@ using UnityEngine.UI;
 
 public class SimpleHealthBar : MonoBehaviour
 {
-    private Slider slider;
-    private Image fill;
+    private Slider _slider;
 
-    void Start()
+    void Awake()
     {
-        slider = GetComponentInChildren<Slider>();
-        fill = slider?.fillRect?.GetComponent<Image>();
+        CacheSlider();
+    }
 
-        if (slider == null)
-            Debug.LogError("Не найден Slider на HealthBar!");
+    void CacheSlider()
+    {
+        if (_slider == null)
+            _slider = GetComponentInChildren<Slider>();
     }
 
     public void UpdateHealth(float currentHealth, float maxHealth)
     {
-        if (slider == null) return;
+        if (_slider == null) CacheSlider();
+        if (_slider == null) return;
 
-        slider.maxValue = maxHealth;
-        slider.value = currentHealth;
-
+        _slider.maxValue = maxHealth;
+        _slider.value = currentHealth;
     }
 }

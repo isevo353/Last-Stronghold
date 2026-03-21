@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f2d5e5806d8c4458f79214366b9caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  startMoney: 50
+  startMoney: 100
   enemyPrefab: {fileID: 9194697024058648527, guid: 044437e5aa37afd42bf60ab6e9586b7d, type: 3}
   spawnInterval: 2
   maxEnemiesOnWave: 10
@@ -4246,6 +4246,18 @@ MonoBehaviour:
   - displayName: Tower
     towerPrefab: {fileID: 539710460538733160, guid: 894272e3769d9144daa195ef3958a5a7, type: 3}
     cost: 50
+    icon: {fileID: 0}
+    cursorIcon: {fileID: 0}
+    cursorHotspot: {x: 0, y: 0}
+  - displayName: Splash
+    towerPrefab: {fileID: 539710460538733161, guid: c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3, type: 3}
+    cost: 75
+    icon: {fileID: 0}
+    cursorIcon: {fileID: 0}
+    cursorHotspot: {x: 0, y: 0}
+  - displayName: Slow
+    towerPrefab: {fileID: 539710460538733162, guid: e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0, type: 3}
+    cost: 60
     icon: {fileID: 0}
     cursorIcon: {fileID: 0}
     cursorHotspot: {x: 0, y: 0}
