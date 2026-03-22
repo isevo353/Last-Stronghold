@@ -5,123 +5,90 @@ using System.Collections;
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy Prefabs")]
-    public GameObject normalEnemyPrefab;     // Обычный орк
-    public GameObject armoredEnemyPrefab;    // Бронированный орк
+    public GameObject normalEnemyPrefab;
+    public GameObject armoredEnemyPrefab;
+    public GameObject slimeEnemyPrefab;
+    public GameObject skeletonEnemyPrefab;
 
     [Header("Wave Settings")]
-    public int waveNumber = 1;               // Текущая волна
-    public int baseNormalEnemies = 5;        // Базовое количество обычных орков
-    public int baseArmoredEnemies = 1;       // Базовое количество бронированных
-    public float spawnInterval = 1f;         // Задержка между спавном
+    public int waveNumber = 1;
+    public float spawnInterval = 1f;
 
     private Coroutine _spawnCoroutine;
     private bool _isSpawning = false;
 
-    /// <summary> Вызывается, когда волна полностью отспавнена (все бронированные + обычные). </summary>
     public Action onWaveFinished;
 
     void Start()
     {
         waveNumber = 1;
-        Debug.Log($"[EnemySpawner] Готов. Волна {waveNumber}");
     }
 
-    /// <summary>
-    /// Вызывается при клике на кнопку "Начать волну"
-    /// </summary>
     public void StartSpawning()
     {
-        if (_isSpawning)
-        {
-            Debug.Log("[EnemySpawner] Спавн уже идёт!");
-            return;
-        }
-
+        if (_isSpawning) return;
         _isSpawning = true;
         _spawnCoroutine = StartCoroutine(SpawnWave());
-        Debug.Log($"[EnemySpawner] Волна {waveNumber} началась!");
     }
 
-    /// <summary>
-    /// Останавливает спавн врагов
-    /// </summary>
     public void StopSpawning()
     {
-        if (_spawnCoroutine != null)
-        {
-            StopCoroutine(_spawnCoroutine);
-        }
+        if (_spawnCoroutine != null) StopCoroutine(_spawnCoroutine);
         _isSpawning = false;
-        Debug.Log("[EnemySpawner] Спавн врагов остановлен!");
     }
 
     IEnumerator SpawnWave()
     {
-        int normalCount = waveNumber + (baseNormalEnemies - 1);
-        int armoredCount = waveNumber + (baseArmoredEnemies - 1);
+        // Расчёт количества
+        int slimeCount = 5 + (waveNumber - 1) * 2;           // 5,7,9,11...
+        int normalCount = 3 + (waveNumber - 1);               // 3,4,5,6...
+        int armoredCount = 1 + (waveNumber - 1) / 2;          // 1,1,2,2,3...
+        int skeletonCount = waveNumber >= 3 ? 1 + (waveNumber - 3) / 2 : 0; // с 3й волны: 1,1,2,2...
 
-        Debug.Log($"[EnemySpawner] Волна {waveNumber}: {normalCount} обычных, {armoredCount} бронированных");
-
-        PrepareNextWave();
-
-        // 1. Сначала спавним всех бронированных орков
-        for (int i = 0; i < armoredCount; i++)
+        // ПОРЯДОК СПАВНА:
+        // 1. Слизни (быстро, интервал 0.5)
+        for (int i = 0; i < slimeCount; i++)
         {
-            if (armoredEnemyPrefab != null)
-            {
-                Debug.Log($"[EnemySpawner] Спавн бронированного орка {i + 1}/{armoredCount}");
-                Instantiate(armoredEnemyPrefab, transform.position, Quaternion.identity);
-
-                // Ждём перед следующим врагом
-                yield return new WaitForSeconds(spawnInterval * 2f); // Бронированные реже
-            }
+            Instantiate(slimeEnemyPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
         }
 
-        // 2. Потом спавним обычных орков
-        Debug.Log($"[EnemySpawner] Спавн {normalCount} обычных орков");
+        yield return new WaitForSeconds(0.5f); // пауза между группами
 
+        // 2. Обычные орки (интервал 1)
         for (int i = 0; i < normalCount; i++)
         {
-            GameObject normalEnemy = Instantiate(normalEnemyPrefab, transform.position, Quaternion.identity);
+            Instantiate(normalEnemyPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(1f);
+        }
 
-            // Инициализируем компонент у каждого врага
-            TestEnemy enemyScript = normalEnemy.GetComponent<TestEnemy>();
-            if (enemyScript != null)
-            {
-                enemyScript.startDelay = i * spawnInterval;
-            }
+        yield return new WaitForSeconds(0.5f);
 
-            yield return new WaitForSeconds(spawnInterval);
+        // 3. Бронированные орки (интервал 1.5)
+        for (int i = 0; i < armoredCount; i++)
+        {
+            Instantiate(armoredEnemyPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(1.5f);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 4. Скелеты (интервал 2, идут последними)
+        for (int i = 0; i < skeletonCount; i++)
+        {
+            Instantiate(skeletonEnemyPrefab, transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(2f);
         }
 
         _isSpawning = false;
-        Debug.Log($"[EnemySpawner] Волна закончена! Следующая: {waveNumber}");
-        yield return null;
+        waveNumber++;
         onWaveFinished?.Invoke();
     }
 
-    /// <summary>
-    /// Подготовка следующей волны
-    /// </summary>
-    void PrepareNextWave()
-    {
-        waveNumber++;
-        Debug.Log($"[EnemySpawner] Следующая волна: {waveNumber}. " +
-                 $"Орков: {baseNormalEnemies + (waveNumber - 1)}, " +
-                 $"Бронированных: {baseArmoredEnemies + (waveNumber - 1)}");
-    }
-
-    /// <summary>
-    /// Сброс к первой волне (при рестарте игры)
-    /// </summary>
     public void ResetWaves()
     {
         waveNumber = 1;
         _isSpawning = false;
-        if (_spawnCoroutine != null)
-        {
-            StopCoroutine(_spawnCoroutine);
-        }
-        Debug.Log("[EnemySpawner] Волны сброшены до 1");
+        if (_spawnCoroutine != null) StopCoroutine(_spawnCoroutine);
     }
 }
