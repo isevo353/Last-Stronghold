@@ -33,13 +33,18 @@ public class TowerPlacer : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenuController.IsPaused) return;
+
+        // Режим продажи: ПКМ по башне (когда не в режиме размещения)
         if (!IsPlacementMode)
         {
             ClearAllHighlights();
+            if (Input.GetMouseButtonDown(1) && (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject()))
+            {
+                TrySellTowerUnderMouse();
+            }
             return;
         }
-
-        if (PauseMenuController.IsPaused) return;
 
         Vector2 world = GetMouseWorld();
         if (ghostRoot != null)
@@ -118,6 +123,39 @@ public class TowerPlacer : MonoBehaviour
     void ClearAllHighlights()
     {
         if (_lastHighlighted != null) { _lastHighlighted.ClearHighlight(); _lastHighlighted = null; }
+    }
+
+    [Header("Sell")]
+    [Tooltip("Радиус области нажатия для продажи башни")]
+    public float sellClickRadius = 0.1f;
+
+    void TrySellTowerUnderMouse()
+    {
+        Vector2 w = GetMouseWorld();
+        var hits = Physics2D.OverlapCircleAll(w, sellClickRadius);
+        Tower closest = null;
+        float bestDist = float.MaxValue;
+        foreach (var c in hits)
+        {
+            Tower t = c.GetComponent<Tower>();
+            if (t == null) continue;
+            float d = Vector2.Distance(w, t.transform.position);
+            if (d < bestDist)
+            {
+                bestDist = d;
+                closest = t;
+            }
+        }
+        if (closest == null) return;
+
+        int refund = closest.PlacedCost / 2;
+        if (GameManager.Instance != null)
+            GameManager.Instance.AddMoney(refund);
+
+        if (closest.PlacedSlot != null)
+            closest.PlacedSlot.FreeSlot();
+
+        Destroy(closest.gameObject);
     }
 
     void EnsureGhost()

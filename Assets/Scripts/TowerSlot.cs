@@ -39,7 +39,10 @@ public class TowerSlot : MonoBehaviour
         if (GameManager.Instance == null || !GameManager.Instance.TrySpendMoney(cost))
             return false;
 
-        Instantiate(towerPrefab, Position, Quaternion.identity);
+        GameObject tower = Instantiate(towerPrefab, Position, Quaternion.identity);
+        Tower t = tower.GetComponent<Tower>();
+        if (t != null)
+            t.SetPlacedInfo(this, cost);
         _occupied = true;
         ClearHighlight();
         return true;
@@ -55,5 +58,12 @@ public class TowerSlot : MonoBehaviour
     {
         if (slotSprite == null) return;
         slotSprite.color = _occupied ? colorOccupied : _originalColor;
+    }
+
+    /// <summary> Освобождает слот после продажи башни. </summary>
+    public void FreeSlot()
+    {
+        _occupied = false;
+        ClearHighlight();
     }
 }

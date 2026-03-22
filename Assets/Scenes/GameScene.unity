@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f2d5e5806d8c4458f79214366b9caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  startMoney: 100
+  startMoney: 500
   enemyPrefab: {fileID: 9194697024058648527, guid: 044437e5aa37afd42bf60ab6e9586b7d, type: 3}
   spawnInterval: 2
   maxEnemiesOnWave: 10
@@ -3132,9 +3132,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   normalEnemyPrefab: {fileID: 9194697024058648527, guid: 044437e5aa37afd42bf60ab6e9586b7d, type: 3}
   armoredEnemyPrefab: {fileID: 2888199315189264973, guid: ee7f4ae02d684fb4aa956dde9ed85360, type: 3}
+  slimeEnemyPrefab: {fileID: 1404045744619977485, guid: e9f76d5db598e0f4981a166eaf7764b8, type: 3}
+  skeletonEnemyPrefab: {fileID: 0}
   waveNumber: 1
-  baseNormalEnemies: 5
-  baseArmoredEnemies: 1
   spawnInterval: 1
 --- !u!4 &1550378494
 Transform:
@@ -3847,6 +3847,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   ghostRoot: {fileID: 0}
   ghostSprite: {fileID: 0}
+  sellClickRadius: 1
 --- !u!4 &1797946604
 Transform:
   m_ObjectHideFlags: 0
@@ -4470,6 +4471,18 @@ PrefabInstance:
     - target: {fileID: 514622782192950076, guid: 7561dbc74c9b22742842bcc24b6212a4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071665508648224725, guid: 7561dbc74c9b22742842bcc24b6212a4, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196902219259795915, guid: 7561dbc74c9b22742842bcc24b6212a4, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196902219259795915, guid: 7561dbc74c9b22742842bcc24b6212a4, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7928211228514284964, guid: 7561dbc74c9b22742842bcc24b6212a4, type: 3}
       propertyPath: m_Name
