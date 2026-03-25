@@ -1,26 +1,27 @@
+//using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    // Њетод длЯ кнопки "€грать"
+    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅ"
     public void PlayGame()
     {
-        Debug.Log("‡агрузка игровой сцены");
-        SceneManager.LoadScene("GameScene"); // €мЯ вашей игровой сцены
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
+        SceneManager.LoadScene("GameScene"); // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     }
-    
-    // Њетод длЯ кнопки "Ќастройки"
+
+    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
     public void OpenSettings()
     {
-        Debug.Log("Ћткрытие настроек");
-        // ‡десь можно сделать панель настроек
+        Debug.Log("РћС‚РєСЂС‹С‚РёРµ РЅР°СЃС‚СЂРѕРµРє");
+        SceneManager.LoadScene("SettingsScene");
     }
-    
-    // Њетод длЯ кнопки "‚ыход"
+
+    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅ"
     public void QuitGame()
     {
-        Debug.Log("‚ыход из игры");
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ");
         
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Gate : MonoBehaviour
 {
@@ -9,6 +8,7 @@ public class Gate : MonoBehaviour
 
     private SimpleHealthBar healthBar;
     private DefeatMenu defeatMenu;
+    private EnemySpawner enemySpawner;
 
     void Start()
     {
@@ -25,7 +25,6 @@ public class Gate : MonoBehaviour
             healthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
-	// ������� ���� ��������� � �����
         defeatMenu = FindObjectOfType<DefeatMenu>();
         if (defeatMenu == null)
         {
@@ -80,6 +79,7 @@ public class Gate : MonoBehaviour
         {
             Debug.LogError("�� ���� �������� ���� ���������: defeatMenu ����� null!");
         }
+	enemySpawner.ResetWaves();
 
         Destroy(gameObject);
     }
