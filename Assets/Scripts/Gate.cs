@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class Gate : MonoBehaviour
 {
@@ -26,12 +25,6 @@ public class Gate : MonoBehaviour
             healthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
-<<<<<<< Updated upstream
-	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
-=======
-	enemySpawner = FindObjectOfType<EnemySpawner>();
-	// Ќаходим меню поражениЯ в сцене
->>>>>>> Stashed changes
         defeatMenu = FindObjectOfType<DefeatMenu>();
         if (defeatMenu == null)
         {
