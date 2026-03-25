@@ -31,20 +31,18 @@ public class PauseMenuController : MonoBehaviour
     
     void Update()
     {
-        // ????????? ??????? ESC ?????? ????
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!Input.GetKeyDown(KeyCode.Escape)) return;
+
+        if (TowerPlacer.Instance != null && TowerPlacer.Instance.IsPlacementMode)
         {
-            Debug.Log("??????? ESC ??????");
-            
-            if (isGamePaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
+            TowerPlacer.Instance.ClearSelection();
+            return;
         }
+
+        if (isGamePaused)
+            ResumeGame();
+        else
+            PauseGame();
     }
     
     // ???????? ?????

@@ -270,6 +270,7 @@ MonoBehaviour:
   damageToGate: 20
   attackCooldown: 1
   damageTextPrefab: {fileID: 0}
+  rewardMoney: 10
 --- !u!1 &5451458448458746028
 GameObject:
   m_ObjectHideFlags: 0

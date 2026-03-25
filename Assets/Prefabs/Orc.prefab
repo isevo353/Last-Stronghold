@@ -503,6 +503,7 @@ MonoBehaviour:
   damageToGate: 20
   attackCooldown: 1
   damageTextPrefab: {fileID: 2224184289095968478, guid: bb7406d8a1fb332458e1d089d754a76d, type: 3}
+  rewardMoney: 5
 --- !u!114 &7768792031879112291
 MonoBehaviour:
   m_ObjectHideFlags: 0

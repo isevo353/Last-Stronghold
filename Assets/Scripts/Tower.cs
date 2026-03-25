@@ -12,17 +12,30 @@ public class Tower : MonoBehaviour
     public Transform shootPoint;
 
     float _lastShotTime;
+    int _placedCost;
+    TowerSlot _placedSlot;
+
+    /// <summary> ?????????? ??? ????????? ?????. </summary>
+    public void SetPlacedInfo(TowerSlot slot, int cost)
+    {
+        _placedSlot = slot;
+        _placedCost = cost;
+    }
+
+    /// <summary> ????????? ??? ????????? (??? ???????? ??? ???????). </summary>
+    public int PlacedCost => _placedCost;
+    public TowerSlot PlacedSlot => _placedSlot;
 
     void Start()
     {
-        // Если shootPoint не назначен в инспекторе - ищем автоматически
+        //  shootPoint     -  
         if (shootPoint == null)
         {
             shootPoint = transform.Find("shootPoint");
 
             if (shootPoint == null)
             {
-                Debug.LogError("shootPoint не найден! Создай дочерний объект 'ShootPoint' под Tower");
+                Debug.LogError("shootPoint  !    'ShootPoint'  Tower");
             }
         }
     }
@@ -43,7 +56,7 @@ public class Tower : MonoBehaviour
 
     TestEnemy FindTarget()
     {
-        // Сначала находим всех врагов по компоненту
+        //      
         TestEnemy[] allEnemies = FindObjectsOfType<TestEnemy>();
 
         float bestDist = Mathf.Infinity;
@@ -51,7 +64,7 @@ public class Tower : MonoBehaviour
 
         foreach (TestEnemy enemy in allEnemies)
         {
-            // Проверяем расстояние до центра врага
+            //     
             float d = Vector2.Distance(transform.position, enemy.transform.position);
 
             if (d <= range && d < bestDist)
@@ -72,6 +85,18 @@ public class Tower : MonoBehaviour
         Projectile proj = go.GetComponent<Projectile>();
         if (proj != null)
             proj.Init(target.transform);
+        else
+        {
+            SplashProjectile splash = go.GetComponent<SplashProjectile>();
+            if (splash != null)
+                splash.Init(target.transform);
+            else
+            {
+                SlowProjectile slow = go.GetComponent<SlowProjectile>();
+                if (slow != null)
+                    slow.Init(target.transform);
+            }
+        }
     }
 
     void OnDrawGizmosSelected()

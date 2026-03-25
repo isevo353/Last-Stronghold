@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,9 @@ public class TestEnemy : MonoBehaviour
     private List<Transform> waypoints;
     private int currentWaypointIndex = 0;
     public float speed = 2f;
-    public float startDelay = 0f; 
+    public float startDelay = 0f;
+    private float _speedMultiplier = 1f;
+    private float _slowEndTime; 
 
     [Header("Combat")]
     public int maxHealth = 100;
@@ -25,6 +27,9 @@ public class TestEnemy : MonoBehaviour
 
     [Header("Visual Effects")]
     public GameObject damageTextPrefab; // Префаб текста урона
+
+    [Header("Reward")]
+    public int rewardMoney = 5; // Монет за убийство
 
 
     void Start()
@@ -68,6 +73,8 @@ public class TestEnemy : MonoBehaviour
 
     void Update()
     {
+        if (Time.time >= _slowEndTime)
+            _speedMultiplier = 1f;
         if (!canMove) return;
         Move();
     }
@@ -84,7 +91,7 @@ public class TestEnemy : MonoBehaviour
         transform.position = Vector2.MoveTowards(
             transform.position,
             target.position,
-            speed * Time.deltaTime
+            speed * _speedMultiplier * Time.deltaTime
         );
 
         if (Vector2.Distance(transform.position, target.position) < 0.1f)
@@ -125,6 +132,13 @@ public class TestEnemy : MonoBehaviour
             targetGate.TakeDamage(damageToGate);
             lastAttackTime = Time.time;
         }
+    }
+
+    /// <summary> Замедляет врага на duration секунд. slowPercent: 0.4 = 40% от обычной скорости. </summary>
+    public void ApplySlow(float duration, float slowPercent)
+    {
+        _speedMultiplier = Mathf.Clamp01(slowPercent);
+        _slowEndTime = Time.time + duration;
     }
 
     public void TakeDamage(int damage)
@@ -171,8 +185,7 @@ public class TestEnemy : MonoBehaviour
         // Деньги
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.AddMoney(5);
-            Debug.Log("asdasdsad");
+            GameManager.Instance.AddMoney(rewardMoney);
         }
 
         Destroy(gameObject, 0.2f);
