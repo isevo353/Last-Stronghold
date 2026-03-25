@@ -47,37 +47,68 @@ public class EnemySpawner : MonoBehaviour
 
         // ПОРЯДОК СПАВНА:
         // 1. Слизни (быстро, интервал 0.5)
-        for (int i = 0; i < slimeCount; i++)
+        if (slimeEnemyPrefab != null)
         {
-            Instantiate(slimeEnemyPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
+            for (int i = 0; i < slimeCount; i++)
+            {
+                Instantiate(slimeEnemyPrefab, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[EnemySpawner] slimeEnemyPrefab не назначен!");
         }
 
         yield return new WaitForSeconds(0.5f); // пауза между группами
 
         // 2. Обычные орки (интервал 1)
-        for (int i = 0; i < normalCount; i++)
+        if (normalEnemyPrefab != null)
         {
-            Instantiate(normalEnemyPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(1f);
+            for (int i = 0; i < normalCount; i++)
+            {
+                Instantiate(normalEnemyPrefab, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(1f);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[EnemySpawner] normalEnemyPrefab не назначен!");
         }
 
         yield return new WaitForSeconds(0.5f);
 
         // 3. Бронированные орки (интервал 1.5)
-        for (int i = 0; i < armoredCount; i++)
+        if (armoredEnemyPrefab != null)
         {
-            Instantiate(armoredEnemyPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(1.5f);
+            for (int i = 0; i < armoredCount; i++)
+            {
+                Instantiate(armoredEnemyPrefab, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(1.5f);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[EnemySpawner] armoredEnemyPrefab не назначен!");
         }
 
         yield return new WaitForSeconds(0.5f);
 
         // 4. Скелеты (интервал 2, идут последними)
-        for (int i = 0; i < skeletonCount; i++)
+        if (skeletonCount > 0)
         {
-            Instantiate(skeletonEnemyPrefab, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(2f);
+            if (skeletonEnemyPrefab != null)
+            {
+                for (int i = 0; i < skeletonCount; i++)
+                {
+                    Instantiate(skeletonEnemyPrefab, transform.position, Quaternion.identity);
+                    yield return new WaitForSeconds(2f);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[EnemySpawner] skeletonEnemyPrefab не назначен! Скелеты пропущены.");
+            }
         }
 
         _isSpawning = false;
