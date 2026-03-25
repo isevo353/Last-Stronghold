@@ -9,6 +9,7 @@ public class Gate : MonoBehaviour
 
     private SimpleHealthBar healthBar;
     private DefeatMenu defeatMenu;
+    private EnemySpawner enemySpawner;
 
     void Start()
     {
@@ -25,7 +26,12 @@ public class Gate : MonoBehaviour
             healthBar.UpdateHealth(currentHealth, maxHealth);
         }
 
+<<<<<<< Updated upstream
 	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
+=======
+	enemySpawner = FindObjectOfType<EnemySpawner>();
+	// Ќаходим меню поражениЯ в сцене
+>>>>>>> Stashed changes
         defeatMenu = FindObjectOfType<DefeatMenu>();
         if (defeatMenu == null)
         {
@@ -80,6 +86,7 @@ public class Gate : MonoBehaviour
         {
             Debug.LogError("пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: defeatMenu пїЅпїЅпїЅпїЅпїЅ null!");
         }
+	enemySpawner.ResetWaves();
 
         Destroy(gameObject);
     }
