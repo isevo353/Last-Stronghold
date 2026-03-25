@@ -127,7 +127,7 @@ public class TowerPlacer : MonoBehaviour
 
     [Header("Sell")]
     [Tooltip("Радиус области нажатия для продажи башни")]
-    public float sellClickRadius = 0.1f;
+    public float sellClickRadius = 1f;
 
     void TrySellTowerUnderMouse()
     {
