@@ -18,10 +18,9 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("StoryMenuScene");
     }
 
-    // Пока что все уровни ведут на одну и ту же сцену
-    public void LoadLevel1() => SceneManager.LoadScene("GameScene");
-    public void LoadLevel2() => SceneManager.LoadScene("GameScene");
-    public void LoadLevel3() => SceneManager.LoadScene("GameScene");
+    public void LoadLevel1() => SceneManager.LoadScene("Level1Scene");
+    public void LoadLevel2() => SceneManager.LoadScene("Level2Scene");
+    public void LoadLevel3() => SceneManager.LoadScene("Level3Scene");
 
     // ����� ��� ������ "���������"
     public void OpenSettings()
