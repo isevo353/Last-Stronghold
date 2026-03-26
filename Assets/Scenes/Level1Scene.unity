@@ -3291,7 +3291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d3e1a9886b44a6969d8f0f9984c7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryLevelManager
-  maxWavesToWin: 10
   _campaignSettings: {fileID: 11400000, guid: 6f1ddf6fd2d2402ca7903318d3f35d4f, type: 2}
 --- !u!1001 &1691210740
 PrefabInstance:
