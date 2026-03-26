@@ -8,14 +8,14 @@ public class CampaignSettings : ScriptableObject
     public class LevelSettings
     {
         public string sceneName;
-        public int maxWavesToWin = 20;
+        public int maxWavesToWin = 10;
         public string victoryTitle = "ПОБЕДА";
         public string victorySubtitle = "Вы прошли уровень!";
     }
 
-    public int defaultMaxWavesToWin = 20;
+    public int defaultMaxWavesToWin = 10;
     public string defaultVictoryTitle = "ПОБЕДА";
-    public string defaultVictorySubtitle = "Вы прошли 20 волн!";
+    public string defaultVictorySubtitle = "Вы прошли 10 волн!";
     public LevelSettings[] levelSettings;
 
     public LevelSettings GetSettingsForScene(string sceneName)
