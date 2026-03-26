@@ -3234,6 +3234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684284266}
   - component: {fileID: 1684284267}
+  - component: {fileID: 1684284268}
   m_Layer: 5
   m_Name: UIManager
   m_TagString: Untagged
@@ -3278,6 +3279,19 @@ MonoBehaviour:
   waveText: {fileID: 184425895}
   gate: {fileID: 437390497}
   enemySpawner: {fileID: 1550378493}
+--- !u!114 &1684284268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684284265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7d3e1a9886b44a6969d8f0f9984c7c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoryLevelManager
+  maxWavesToWin: 10
 --- !u!1001 &1691210740
 PrefabInstance:
   m_ObjectHideFlags: 0
