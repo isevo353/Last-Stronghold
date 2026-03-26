@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [Header("Spawner")]
     public EnemySpawner enemySpawner; // ← добавь ссылку
 
+    private StoryLevelManager _storyLevelManager;
     private int _currentWave = 0;
     private bool _waveActive = false;
 
@@ -34,6 +35,12 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        _storyLevelManager = FindObjectOfType<StoryLevelManager>();
+        if (_storyLevelManager == null && StoryLevelManager.IsStoryLevelScene())
+        {
+            _storyLevelManager = gameObject.AddComponent<StoryLevelManager>();
+        }
+
         if (startWaveButton != null)
             startWaveButton.onClick.AddListener(OnStartWavePressed);
 
@@ -56,6 +63,11 @@ public class UIManager : MonoBehaviour
 
     void OnStartWavePressed()
     {
+        if (_storyLevelManager != null && !_storyLevelManager.CanStartWave(_currentWave))
+        {
+            return;
+        }
+
         if (_waveActive)
         {
             Debug.Log("[UIManager] Волна уже начата!");
@@ -82,8 +94,6 @@ public class UIManager : MonoBehaviour
     void EndWave()
     {
         _waveActive = false;
-        startWaveButton.interactable = true;
-        startWaveButton.gameObject.SetActive(true); // ← кнопка появляется снова
 
         if (enemySpawner != null)
         {
@@ -91,6 +101,14 @@ public class UIManager : MonoBehaviour
         }
 
         Debug.Log($"[UIManager] Волна {_currentWave} закончена!");
+
+        if (_storyLevelManager != null && _storyLevelManager.TryHandleVictory(_currentWave))
+        {
+            return;
+        }
+
+        startWaveButton.interactable = true;
+        startWaveButton.gameObject.SetActive(true); // ← кнопка появляется снова
     }
 
     void UpdateUI()
@@ -104,7 +122,9 @@ public class UIManager : MonoBehaviour
             livesText.text = "HP ворот: " + gate.currentHealth;
 
         if (waveText != null)
-            waveText.text = "Волна: " + _currentWave;
+            waveText.text = _storyLevelManager != null
+                ? $"Волна: {_currentWave}/{_storyLevelManager.maxWavesToWin}"
+                : "Волна: " + _currentWave;
 
         // Обновляем состояние кнопки
         if (startWaveButton != null && !_waveActive)
