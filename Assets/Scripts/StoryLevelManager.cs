@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class StoryLevelManager : MonoBehaviour
 {
-    public int maxWavesToWin = 20;
+    public int maxWavesToWin = 10;
 
     private GameObject _victoryPanel;
     private bool _isVictory;
     private string _victoryTitle = "ПОБЕДА";
-    private string _victorySubtitle = "Вы прошли 20 волн!";
+    private string _victorySubtitle = "";
 
     public static bool IsStoryLevelScene()
     {

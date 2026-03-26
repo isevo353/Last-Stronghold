@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c14db0d95f5444cb8c59537cfed53a8, type: 3}
   m_Name: CampaignSettings
   m_EditorClassIdentifier: 
-  defaultMaxWavesToWin: 20
+  defaultMaxWavesToWin: 10
   defaultVictoryTitle: ПОБЕДА
-  defaultVictorySubtitle: Вы прошли 20 волн!
+  defaultVictorySubtitle: Вы прошли 10 волн!
   levelSettings:
   - sceneName: Level1Scene
-    maxWavesToWin: 20
+    maxWavesToWin: 10
     victoryTitle: ПОБЕДА
     victorySubtitle: Уровень 1 пройден!
   - sceneName: Level2Scene
-    maxWavesToWin: 20
+    maxWavesToWin: 10
     victoryTitle: ПОБЕДА
     victorySubtitle: Уровень 2 пройден!
   - sceneName: Level3Scene
-    maxWavesToWin: 20
+    maxWavesToWin: 10
     victoryTitle: ПОБЕДА
     victorySubtitle: Уровень 3 пройден!
