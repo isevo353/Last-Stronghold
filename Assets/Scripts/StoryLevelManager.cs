@@ -6,10 +6,12 @@ public class StoryLevelManager : MonoBehaviour
 {
     public int maxWavesToWin = 10;
 
+    [SerializeField] private CampaignSettings _campaignSettings;
+
     private GameObject _victoryPanel;
     private bool _isVictory;
     private string _victoryTitle = "ПОБЕДА";
-    private string _victorySubtitle = "";
+    private string _victorySubtitle = "Вы прошли все волны!";
 
     public static bool IsStoryLevelScene()
     {
@@ -42,9 +44,13 @@ public class StoryLevelManager : MonoBehaviour
 
     void ApplyCampaignSettings()
     {
-        CampaignSettings settings = Resources.Load<CampaignSettings>("CampaignSettings");
+        CampaignSettings settings = _campaignSettings != null
+            ? _campaignSettings
+            : Resources.Load<CampaignSettings>("CampaignSettings");
+
         if (settings == null)
         {
+            Debug.LogWarning("[StoryLevelManager] CampaignSettings не найден ни как ссылка, ни в Resources. maxWavesToWin=" + maxWavesToWin);
             _victorySubtitle = $"Вы прошли {maxWavesToWin} волн!";
             return;
         }
