@@ -11,7 +11,7 @@ public class StoryLevelManager : MonoBehaviour
     private GameObject _victoryPanel;
     private bool _isVictory;
     private string _victoryTitle = "ПОБЕДА";
-    private string _victorySubtitle = "Вы прошли все волны!";
+    private string _victorySubtitle = "Вы прошли 10 волн!";
 
     public static bool IsStoryLevelScene()
     {
