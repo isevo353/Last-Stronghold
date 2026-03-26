@@ -8,11 +8,9 @@ public class SettingsMenu : MonoBehaviour
     public Slider musicSlider;
     public Button backButton;
 
-    private const string MUSIC_KEY = "MusicVolume";
-
     void Start()
     {
-        // ЗАГРУЖАЕМ ЯРКОСТЬ ИЗ BrightnessManager
+        // ЯРКОСТЬ
         if (BrightnessManager.Instance != null)
         {
             float savedBrightness = BrightnessManager.Instance.GetBrightness();
@@ -25,20 +23,19 @@ public class SettingsMenu : MonoBehaviour
                 brightnessSlider.onValueChanged.AddListener(OnBrightnessChange);
             }
         }
-        else
-        {
-            Debug.LogError("BrightnessManager не найден! Добавьте его в сцену.");
-        }
 
-        // ЗАГРУЖАЕМ МУЗЫКУ
-        float savedMusic = PlayerPrefs.GetFloat(MUSIC_KEY, 0.7f);
-        if (musicSlider != null)
+        // МУЗЫКА
+        if (MusicManager.Instance != null)
         {
-            musicSlider.minValue = 0f;
-            musicSlider.maxValue = 1f;
-            musicSlider.value = savedMusic;
-            musicSlider.onValueChanged.AddListener(OnMusicChange);
-            OnMusicChange(savedMusic);
+            float savedMusic = MusicManager.Instance.GetVolume();
+
+            if (musicSlider != null)
+            {
+                musicSlider.minValue = 0f;
+                musicSlider.maxValue = 1f;
+                musicSlider.value = savedMusic;
+                musicSlider.onValueChanged.AddListener(OnMusicChange);
+            }
         }
 
         // КНОПКА НАЗАД
@@ -50,7 +47,6 @@ public class SettingsMenu : MonoBehaviour
 
     void OnBrightnessChange(float value)
     {
-        // МЕНЯЕМ ЯРКОСТЬ ЧЕРЕЗ МЕНЕДЖЕР
         if (BrightnessManager.Instance != null)
         {
             BrightnessManager.Instance.SetBrightness(value);
@@ -63,9 +59,6 @@ public class SettingsMenu : MonoBehaviour
         {
             MusicManager.Instance.SetVolume(value);
         }
-
-        PlayerPrefs.SetFloat(MUSIC_KEY, value);
-        PlayerPrefs.Save();
     }
 
     void BackToMenu()

@@ -5,34 +5,38 @@ public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
 
-    [Header("������ ��� ����")]
+    [Header("Музыка для сцен")]
     public AudioClip mainMenuMusic;
     public AudioClip gameSceneMusic;
 
-    [Header("���������")]
-    [Range(0f, 1f)] public float volume = 0.5f;
-    public bool loop = true;
-
     private AudioSource audioSource;
     private AudioClip currentClip;
+    private float currentVolume = 0.5f;
+
+    private const string MUSIC_KEY = "MusicVolume";
 
     void Awake()
     {
-        // ��������
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // ������� AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.volume = volume;
-        audioSource.loop = loop;
+        audioSource.loop = true;
 
-        // ������������� �� ������� ����� �����
+        // ПРИНУДИТЕЛЬНО СТАВИМ ГРОМКОСТЬ 0.5 (50%) ПРИ ЗАПУСКЕ
+        currentVolume = 0.5f;
+        audioSource.volume = currentVolume;
+        PlayerPrefs.SetFloat(MUSIC_KEY, currentVolume);
+        PlayerPrefs.Save();
+
+        Debug.Log($"MusicManager создан. Громкость: {currentVolume * 100}%");
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -45,27 +49,23 @@ public class MusicManager : MonoBehaviour
     {
         AudioClip newClip = null;
 
-        // ���������� ������ ��� �����
         switch (sceneIndex)
         {
-            case 0: // ������� ����
+            case 0:
                 newClip = mainMenuMusic;
                 break;
-            case 1: // ������� �����
+            case 1:
                 newClip = gameSceneMusic;
                 break;
-                // ������ ������ ����� �� �������������
         }
 
-        // ���� ������ ���������� - ������
         if (newClip != null && newClip != currentClip)
         {
             currentClip = newClip;
             audioSource.clip = currentClip;
             audioSource.Play();
-            Debug.Log($"������ �������� ��: {currentClip.name}");
+            Debug.Log($"Музыка запущена: {currentClip.name}, громкость: {currentVolume}");
         }
-        // ���� ������ �� ��, �� ������������ - ����������
         else if (!audioSource.isPlaying && currentClip != null)
         {
             audioSource.Play();
@@ -74,33 +74,18 @@ public class MusicManager : MonoBehaviour
 
     public void SetVolume(float newVolume)
     {
-        volume = Mathf.Clamp01(newVolume);
-        audioSource.volume = volume;
+        currentVolume = Mathf.Clamp01(newVolume);
+        audioSource.volume = currentVolume;
+
+        PlayerPrefs.SetFloat(MUSIC_KEY, currentVolume);
+        PlayerPrefs.Save();
+
+        Debug.Log($"Громкость музыки: {currentVolume * 100}%");
     }
 
-    // В методе ValueMusic() замените:
-    private void ValueMusic()
+    public float GetVolume()
     {
-        // Вместо audioSource.volume = volume;
-        if (MusicManager.Instance != null)
-        {
-            MusicManager.Instance.SetVolume(volume);
-        }
-    }
-
-    public void StopMusic()
-    {
-        audioSource.Stop();
-    }
-
-    public void PauseMusic()
-    {
-        audioSource.Pause();
-    }
-
-    public void ResumeMusic()
-    {
-        audioSource.UnPause();
+        return currentVolume;
     }
 
     void OnDestroy()
