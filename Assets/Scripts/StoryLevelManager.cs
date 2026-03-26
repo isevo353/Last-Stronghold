@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class StoryLevelManager : MonoBehaviour
 {
+    [SerializeField] private CampaignSettings _campaignSettings;
     public int maxWavesToWin = 10;
 
     private GameObject _victoryPanel;
@@ -42,9 +43,13 @@ public class StoryLevelManager : MonoBehaviour
 
     void ApplyCampaignSettings()
     {
-        CampaignSettings settings = Resources.Load<CampaignSettings>("CampaignSettings");
+
+        CampaignSettings settings = _campaignSettings != null
+            ? _campaignSettings
+            : Resources.Load<CampaignSettings>("CampaignSettings");
         if (settings == null)
         {
+            Debug.LogWarning("[StoryLevelManager] CampaignSettings не найден ни как ссылка, ни в Resources. maxWavesToWin=" + maxWavesToWin);
             _victorySubtitle = $"Вы прошли {maxWavesToWin} волн!";
             return;
         }

@@ -2999,6 +2999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d3e1a9886b44a6969d8f0f9984c7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoryLevelManager
+  _campaignSettings: {fileID: 11400000, guid: 6f1ddf6fd2d2402ca7903318d3f35d4f, type: 2}
   maxWavesToWin: 10
 --- !u!4 &1502405744
 Transform:
@@ -3008,12 +3009,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502405742}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 481.77527, y: 78.58373, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 49.575287, y: -139.51627, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1684284266}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1550378492
 GameObject:
@@ -3297,7 +3298,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1502405744}
   m_Father: {fileID: 807885743}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4481,4 +4483,3 @@ SceneRoots:
   - {fileID: 2095610413}
   - {fileID: 1081589157}
   - {fileID: 5090059261936118114}
-  - {fileID: 1502405744}
