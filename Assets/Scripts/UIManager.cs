@@ -106,9 +106,17 @@ public class UIManager : MonoBehaviour
         if (waveText != null)
             waveText.text = "Волна: " + _currentWave;
 
-        // Кнопка «Начать волну» недоступна на паузе
+        // Обновляем состояние кнопки
         if (startWaveButton != null && !_waveActive)
+        {
+            // Принудительно проверяем и восстанавливаем кнопку
+            if (!startWaveButton.gameObject.activeSelf)
+            {
+                Debug.LogWarning("[UIManager] Кнопка неактивна, хотя волна не активна! Восстанавливаем...");
+                startWaveButton.gameObject.SetActive(true);
+            }
             startWaveButton.interactable = !PauseMenuController.IsPaused;
+        }
     }
 
     public bool IsWaveActive()

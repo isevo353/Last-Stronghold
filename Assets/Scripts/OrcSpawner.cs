@@ -37,6 +37,18 @@ public class EnemySpawner : MonoBehaviour
         _isSpawning = false;
     }
 
+    bool TrySpawn(GameObject prefab, string enemyName)
+    {
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[EnemySpawner] Пропущен спавн '{enemyName}': prefab не назначен.");
+            return false;
+        }
+
+        Instantiate(prefab, transform.position, Quaternion.identity);
+        return true;
+    }
+
     IEnumerator SpawnWave()
     {
         // Расчёт количества
@@ -49,7 +61,7 @@ public class EnemySpawner : MonoBehaviour
         // 1. Слизни (быстро, интервал 0.5)
         for (int i = 0; i < slimeCount; i++)
         {
-            Instantiate(slimeEnemyPrefab, transform.position, Quaternion.identity);
+            TrySpawn(slimeEnemyPrefab, "Slime");
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -58,7 +70,7 @@ public class EnemySpawner : MonoBehaviour
         // 2. Обычные орки (интервал 1)
         for (int i = 0; i < normalCount; i++)
         {
-            Instantiate(normalEnemyPrefab, transform.position, Quaternion.identity);
+            TrySpawn(normalEnemyPrefab, "Orc");
             yield return new WaitForSeconds(1f);
         }
 
@@ -67,7 +79,7 @@ public class EnemySpawner : MonoBehaviour
         // 3. Бронированные орки (интервал 1.5)
         for (int i = 0; i < armoredCount; i++)
         {
-            Instantiate(armoredEnemyPrefab, transform.position, Quaternion.identity);
+            TrySpawn(armoredEnemyPrefab, "ArmedOrc");
             yield return new WaitForSeconds(1.5f);
         }
 
@@ -76,7 +88,7 @@ public class EnemySpawner : MonoBehaviour
         // 4. Скелеты (интервал 2, идут последними)
         for (int i = 0; i < skeletonCount; i++)
         {
-            Instantiate(skeletonEnemyPrefab, transform.position, Quaternion.identity);
+            TrySpawn(skeletonEnemyPrefab, "Skeleton");
             yield return new WaitForSeconds(2f);
         }
 
