@@ -14,7 +14,7 @@ public class Gate : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        // ������� HealthBar �������������
+     
         healthBar = GetComponentInChildren<SimpleHealthBar>();
         if (healthBar == null)
         {
@@ -28,18 +28,18 @@ public class Gate : MonoBehaviour
         defeatMenu = FindObjectOfType<DefeatMenu>();
         if (defeatMenu == null)
         {
-            Debug.LogError("DefeatMenu �� ������ � �����! �������� ��� �� Canvas.");
+            Debug.LogError("DefeatMenu  Canvas.");
         }
 
-        Debug.Log("������ �������. HP: " + currentHealth);
+        Debug.Log(currentHealth);
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log("������ �������� ����: " + damage + ". �������� HP: " + currentHealth);
+        Debug.Log( + damage + ".  HP: " + currentHealth);
 
-        // ��������� HealthBar
+        
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
@@ -67,17 +67,15 @@ public class Gate : MonoBehaviour
 
     void DestroyGate()
     {
-        Debug.Log("?????? ??????????!");
-        // HP ????? ? ???????????? �?????�; ???????/???? ?????? ????? DefeatMenu
-
-        // ?????????? ???? ?????????
+        Debug.Log("DestroyGate");
+       
         if (defeatMenu != null)
         {
             defeatMenu.ShowDefeatMenu();
         }
         else
         {
-            Debug.LogError("�� ���� �������� ���� ���������: defeatMenu ����� null!");
+            Debug.LogError("defeatMenu  null!");
         }
 	enemySpawner.ResetWaves();
 

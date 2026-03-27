@@ -3,9 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-/// <summary>
-/// Панель магазина башен. Кнопки по типам башен; при достатке денег — выбор башни, переход в режим размещения.
-/// </summary>
+
 public class TowerShopUI : MonoBehaviour
 {
     [Header("Tower types")]
@@ -17,12 +15,22 @@ public class TowerShopUI : MonoBehaviour
 
     private readonly List<Button> _buttons = new List<Button>();
     private readonly List<TowerShopEntry> _entries = new List<TowerShopEntry>();
+    private readonly List<int> _costs = new List<int>();
+    private float _costMultiplier = 1f;
 
     void Start()
     {
+        ApplyCampaignBalance();
         if (buttonsRoot == null) buttonsRoot = transform;
         EnsureLayout();
         BuildButtons();
+    }
+
+    void ApplyCampaignBalance()
+    {
+        CampaignSettings settings = Resources.Load<CampaignSettings>("CampaignSettings");
+        if (settings == null) return;
+        _costMultiplier = Mathf.Max(0.1f, settings.GetBalanceForScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name).towerCostMultiplier);
     }
 
     void EnsureLayout()
@@ -49,6 +57,7 @@ public class TowerShopUI : MonoBehaviour
             Destroy(c.gameObject);
         _buttons.Clear();
         _entries.Clear();
+        _costs.Clear();
 
         if (towers == null || towers.Count == 0)
         {
@@ -59,6 +68,7 @@ public class TowerShopUI : MonoBehaviour
         {
             var e = towers[i];
             if (e.towerPrefab == null) continue;
+            int adjustedCost = Mathf.CeilToInt(e.cost * _costMultiplier);
 
             GameObject go = buttonPrefab != null
                 ? Instantiate(buttonPrefab, buttonsRoot)
@@ -69,12 +79,13 @@ public class TowerShopUI : MonoBehaviour
             var icon = go.transform.Find("Icon")?.GetComponent<Image>();
             if (icon != null && e.icon != null) icon.sprite = e.icon;
             var label = go.GetComponentInChildren<TextMeshProUGUI>();
-            if (label != null) label.text = $"{e.displayName}\n{e.cost}";
+            if (label != null) label.text = $"{e.displayName}\n{adjustedCost}";
 
             var entry = e;
-            b.onClick.AddListener(() => OnTowerClicked(entry));
+            b.onClick.AddListener(() => OnTowerClicked(entry, adjustedCost));
             _buttons.Add(b);
             _entries.Add(e);
+            _costs.Add(adjustedCost);
         }
     }
 
@@ -106,12 +117,12 @@ public class TowerShopUI : MonoBehaviour
         return go;
     }
 
-    void OnTowerClicked(TowerShopEntry e)
+    void OnTowerClicked(TowerShopEntry e, int cost)
     {
         if (e.towerPrefab == null) return;
-        if (GameManager.Instance != null && GameManager.Instance.GetMoney() < e.cost) return;
+        if (GameManager.Instance != null && GameManager.Instance.GetMoney() < cost) return;
         if (TowerPlacer.Instance != null)
-            TowerPlacer.Instance.SelectTower(e.towerPrefab, e.cost, e.cursorIcon, e.cursorHotspot);
+            TowerPlacer.Instance.SelectTower(e.towerPrefab, cost, e.cursorIcon, e.cursorHotspot);
     }
 
     void RefreshButtonStates()
@@ -120,7 +131,8 @@ public class TowerShopUI : MonoBehaviour
         for (int i = 0; i < _entries.Count; i++)
         {
             if (i >= _buttons.Count) break;
-            _buttons[i].interactable = money >= _entries[i].cost;
+            int cost = i < _costs.Count ? _costs[i] : _entries[i].cost;
+            _buttons[i].interactable = money >= cost;
         }
     }
 }

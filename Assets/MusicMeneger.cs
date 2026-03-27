@@ -42,22 +42,22 @@ public class MusicManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        PlayMusicForScene(scene.buildIndex);
+        PlayMusicForScene(scene);
     }
 
-    void PlayMusicForScene(int sceneIndex)
+    void PlayMusicForScene(Scene scene)
     {
         AudioClip newClip = null;
 
-        switch (sceneIndex)
-        {
-            case 0:
-                newClip = mainMenuMusic;
-                break;
-            case 1:
-                newClip = gameSceneMusic;
-                break;
-        }
+        // Музыка меню — в меню/сюжете/настройках, боевая — только на уровнях/в игре.
+        // Так при входе на уровень гарантированно переключаемся на gameSceneMusic.
+        bool isLevel =
+            scene.name == "GameScene" ||
+            scene.name == "Level1Scene" ||
+            scene.name == "Level2Scene" ||
+            scene.name == "Level3Scene";
+
+        newClip = isLevel ? gameSceneMusic : mainMenuMusic;
 
         if (newClip != null && newClip != currentClip)
         {
