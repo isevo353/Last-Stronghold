@@ -32,7 +32,7 @@ Transform:
   m_LocalScale: {x: 0.33, y: 0.333, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 800000000000000003}
+  - {fileID: 4812058532350859512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2397059009614114328
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2645522406032563987, guid: 465ae1b63b59d1343bc7cce630c24eb0, type: 3}
+  m_Sprite: {fileID: 5781700600829858755, guid: c4833a76f946e1143aa2fabf7924d3b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -132,7 +132,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.43, y: 4.23}
+    oldSize: {x: 3.61, y: 4.17}
     newSize: {x: 2.43, y: 4.23}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   startDelay: 0
   maxHealth: 300
   currentHealth: 0
-  healthBar: {fileID: 800000000000000002}
+  healthBar: {fileID: 6093479570107996635}
   damageToGate: 20
   attackCooldown: 1
   damageTextPrefab: {fileID: 0}
@@ -190,7 +190,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
---- !u!114 &800000000000000002 stripped
+--- !u!224 &4812058532350859512 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+  m_PrefabInstance: {fileID: 800000000000000001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6093479570107996635 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6884394834739796442, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
   m_PrefabInstance: {fileID: 800000000000000001}
@@ -201,8 +206,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5622af369d81346baebc6438dfcbc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleHealthBar
---- !u!224 &800000000000000003 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
-  m_PrefabInstance: {fileID: 800000000000000001}
-  m_PrefabAsset: {fileID: 0}
