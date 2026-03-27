@@ -52,6 +52,12 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("Level3Scene");
     }
 
+    public void BackToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
     // ����� ��� ������ "���������"
     public void OpenSettings()
     {
@@ -127,4 +133,5 @@ public class MainMenuController : MonoBehaviour
 
         return panel;
     }
+
 }

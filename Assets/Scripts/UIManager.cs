@@ -116,15 +116,15 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance == null) return;
 
         if (moneyText != null)
-            moneyText.text = "Монеты: " + GameManager.Instance.GetMoney();
+            moneyText.text = "coins: " + GameManager.Instance.GetMoney();
 
         if (livesText != null && gate != null)
-            livesText.text = "HP ворот: " + gate.currentHealth;
+            livesText.text = "HP gates: " + gate.currentHealth;
 
         if (waveText != null)
             waveText.text = _storyLevelManager != null
-                ? $"Волна: {_currentWave}/{_storyLevelManager.maxWavesToWin}"
-                : "Волна: " + _currentWave;
+                ? $"wave: {_currentWave}/{_storyLevelManager.maxWavesToWin}"
+                : "wave: " + _currentWave;
 
         // Обновляем состояние кнопки
         if (startWaveButton != null && !_waveActive)
