@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3302adc835d5e742b3434327df9ac43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestEnemy
-  speed: 1
+  speed: 1.2
   startDelay: 0
-  maxHealth: 300
+  maxHealth: 500
   currentHealth: 0
   healthBar: {fileID: 6093479570107996635}
   damageToGate: 20
