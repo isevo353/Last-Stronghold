@@ -163,7 +163,7 @@ public class TestEnemy : MonoBehaviour
         if (damageTextPrefab != null)
         {
             GameObject textObj = Instantiate(damageTextPrefab, transform);
-            textObj.transform.localPosition = new Vector3(0, 1.5f, 0); // Над головой
+            textObj.transform.localPosition = new Vector3(0, 1.5f, 0); 
             textObj.GetComponent<DamagePopup>().SetDamage(damage);
         }
     }
