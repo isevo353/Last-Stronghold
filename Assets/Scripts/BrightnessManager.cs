@@ -21,27 +21,27 @@ public class BrightnessManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // ===== ПРИНУДИТЕЛЬНЫЙ СБРОС ДЛЯ ТЕСТА =====
+       
         PlayerPrefs.DeleteKey(FIRST_LAUNCH_KEY);
         PlayerPrefs.DeleteKey(BRIGHTNESS_KEY);
-        // =========================================
+      
 
-        // ПРОВЕРЯЕМ ПЕРВЫЙ ЛИ ЭТО ЗАПУСК
+        
         if (!PlayerPrefs.HasKey(FIRST_LAUNCH_KEY))
         {
             Debug.Log("Первый запуск! Устанавливаю настройки по умолчанию");
 
-            // СТАВИМ ЯРКОСТЬ ПО УМОЛЧАНИЮ = 1
+           
             currentBrightness = 1f;
             PlayerPrefs.SetFloat(BRIGHTNESS_KEY, currentBrightness);
 
-            // СОХРАНЯЕМ, ЧТО ПЕРВЫЙ ЗАПУСК УЖЕ БЫЛ
+            
             PlayerPrefs.SetInt(FIRST_LAUNCH_KEY, 1);
             PlayerPrefs.Save();
         }
         else
         {
-            // ЗАГРУЖАЕМ СОХРАНЁННУЮ ЯРКОСТЬ
+           
             currentBrightness = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f);
             Debug.Log($"Загружена сохранённая яркость: {currentBrightness}");
         }

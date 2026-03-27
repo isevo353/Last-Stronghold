@@ -1,9 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Клетка для размещения башни. Размещение через магазин (TowerShopUI) + TowerPlacer.
-/// </summary>
+
 public class TowerSlot : MonoBehaviour
 {
     [Header("Visuals")]
@@ -39,7 +37,10 @@ public class TowerSlot : MonoBehaviour
         if (GameManager.Instance == null || !GameManager.Instance.TrySpendMoney(cost))
             return false;
 
-        GameObject tower = Instantiate(towerPrefab, Position, Quaternion.identity);
+        // Делаем башню дочерней слоту, чтобы она наследовала масштаб клетки
+        GameObject tower = Instantiate(towerPrefab, transform);
+        tower.transform.localPosition = Vector3.zero;
+        tower.transform.localRotation = Quaternion.identity;
         Tower t = tower.GetComponent<Tower>();
         if (t != null)
             t.SetPlacedInfo(this, cost);

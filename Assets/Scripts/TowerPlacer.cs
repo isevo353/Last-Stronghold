@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// Режим размещения башни: выбор в магазине → курсор/призрак → клик по клетке.
-/// </summary>
+
 public class TowerPlacer : MonoBehaviour
 {
     public static TowerPlacer Instance { get; private set; }

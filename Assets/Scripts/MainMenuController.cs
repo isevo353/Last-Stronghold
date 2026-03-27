@@ -18,15 +18,15 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    // ����� ��� ������ "������" / "����������� �����"
+ 
     public void PlayGame()
     {
-        Debug.Log("�������� ������� �����");
+        Debug.Log("Play Game");
         Time.timeScale = 1f;
-        SceneManager.LoadScene("GameScene"); // ��� ����� ������� �����
+        SceneManager.LoadScene("GameScene");
     }
 
-    // ����� ��� ������ "������"
+  
     public void OpenStoryMenu()
     {
         Debug.Log("Открытие меню сюжета");
@@ -58,7 +58,7 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("MainMenuScene");
     }
 
-    // ����� ��� ������ "���������"
+   
     public void OpenSettings()
     {
         Debug.Log("Открытие настроек");
@@ -66,10 +66,9 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("SettingsScene");
     }
 
-    // ����� ��� ������ "�����"
     public void QuitGame()
     {
-        Debug.Log("����� �� ����");
+        Debug.Log("Quit Game");
         
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

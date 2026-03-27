@@ -13,7 +13,7 @@ public class TutorialUI : MonoBehaviour
         {
             tutorialText.text = "Выбери башню в панели магазина → курсор станет башней → кликни по кругу, чтобы поставить.\nПКМ или ESC — отмена.";
 
-            // Ñêðûâàåì ÷åðåç showTime ñåêóíä
+           
             Invoke(nameof(HideTutorial), showTime);
         }
     }
