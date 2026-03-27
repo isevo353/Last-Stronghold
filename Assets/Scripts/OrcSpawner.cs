@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -16,12 +17,39 @@ public class EnemySpawner : MonoBehaviour
 
     private Coroutine _spawnCoroutine;
     private bool _isSpawning = false;
+    private CampaignSettings.BalanceData _balance;
+    private CampaignSettings.LevelSettings _levelSettings;
 
     public Action onWaveFinished;
 
     void Start()
     {
         waveNumber = 1;
+        ApplyCampaignBalance();
+    }
+
+    void ApplyCampaignBalance()
+    {
+        CampaignSettings settings = Resources.Load<CampaignSettings>("CampaignSettings");
+        if (settings != null)
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            _balance = settings.GetBalanceForScene(sceneName);
+            _levelSettings = settings.GetSettingsForScene(sceneName);
+        }
+        else
+        {
+            _balance = new CampaignSettings.BalanceData
+            {
+                startMoney = 0,
+                towerCostMultiplier = 1f,
+                enemyRewardMultiplier = 1f,
+                enemyHealthMultiplier = 1f,
+                enemySpeedMultiplier = 1f,
+                enemyCountMultiplier = 1f
+            };
+            _levelSettings = null;
+        }
     }
 
     public void StartSpawning()
@@ -37,25 +65,87 @@ public class EnemySpawner : MonoBehaviour
         _isSpawning = false;
     }
 
-    bool TrySpawn(GameObject prefab, string enemyName)
+    GameObject TrySpawn(GameObject prefab, string enemyName)
     {
         if (prefab == null)
         {
             Debug.LogWarning($"[EnemySpawner] Пропущен спавн '{enemyName}': prefab не назначен.");
-            return false;
+            return null;
         }
 
-        Instantiate(prefab, transform.position, Quaternion.identity);
-        return true;
+        GameObject go = Instantiate(prefab, transform.position, Quaternion.identity);
+        ApplyEnemyBalance(go);
+        return go;
+    }
+
+    void ApplyEnemyBalance(GameObject go)
+    {
+        if (go == null) return;
+        TestEnemy e = go.GetComponent<TestEnemy>();
+        if (e == null) return;
+
+        float hpMult = Mathf.Max(0.1f, _balance.enemyHealthMultiplier);
+        float speedMult = Mathf.Max(0.1f, _balance.enemySpeedMultiplier);
+        float rewardMult = Mathf.Max(0f, _balance.enemyRewardMultiplier);
+
+        e.maxHealth = Mathf.Max(1, Mathf.RoundToInt(e.maxHealth * hpMult));
+        e.currentHealth = e.maxHealth;
+        e.speed = e.speed * speedMult;
+        e.rewardMoney = Mathf.Max(0, Mathf.RoundToInt(e.rewardMoney * rewardMult));
+    }
+
+    int ScaleCount(int count)
+    {
+        float mult = Mathf.Max(0.1f, _balance.enemyCountMultiplier);
+        return Mathf.Max(0, Mathf.CeilToInt(count * mult));
     }
 
     IEnumerator SpawnWave()
     {
-        // Расчёт количества
-        int slimeCount = 5 + (waveNumber - 1) * 2;           // 5,7,9,11...
-        int normalCount = 3 + (waveNumber - 1);               // 3,4,5,6...
-        int armoredCount = 1 + (waveNumber - 1) / 2;          // 1,1,2,2,3...
-        int skeletonCount = waveNumber >= 3 ? 1 + (waveNumber - 3) / 2 : 0; // с 3й волны: 1,1,2,2...
+        // Базовые количества врагов берём из CampaignSettings (не хардкод в коде).
+        // Потом дополнительно масштабируем через _balance.enemyCountMultiplier.
+        int slimeBase = _levelSettings != null
+            ? Mathf.Max(0, _levelSettings.slimeCountWave1 + (waveNumber - 1) * _levelSettings.slimeGrowthPerWave)
+            : Mathf.Max(0, 5 + (waveNumber - 1) * 2);
+
+        int normalBase = _levelSettings != null
+            ? Mathf.Max(0, _levelSettings.normalCountWave1 + (waveNumber - 1) * _levelSettings.normalGrowthPerWave)
+            : Mathf.Max(0, 3 + (waveNumber - 1) * 1);
+
+        int armoredBase = 0;
+        if (_levelSettings != null)
+        {
+            if (waveNumber >= _levelSettings.armoredStartWave)
+            {
+                int interval = Mathf.Max(1, _levelSettings.armoredIntervalWaves);
+                int steps = (waveNumber - _levelSettings.armoredStartWave) / interval;
+                armoredBase = Mathf.Max(0, _levelSettings.armoredCountAtStart + steps * _levelSettings.armoredGrowthStep);
+            }
+        }
+        else
+        {
+            armoredBase = Mathf.Max(0, 1 + (waveNumber - 1) / 2);
+        }
+
+        int skeletonBase = 0;
+        if (_levelSettings != null)
+        {
+            if (waveNumber >= _levelSettings.skeletonStartWave)
+            {
+                int interval = Mathf.Max(1, _levelSettings.skeletonIntervalWaves);
+                int steps = (waveNumber - _levelSettings.skeletonStartWave) / interval;
+                skeletonBase = Mathf.Max(0, _levelSettings.skeletonCountAtStart + steps * _levelSettings.skeletonGrowthStep);
+            }
+        }
+        else
+        {
+            skeletonBase = Mathf.Max(0, waveNumber >= 3 ? 1 + (waveNumber - 3) / 2 : 0);
+        }
+
+        int slimeCount = ScaleCount(slimeBase);
+        int normalCount = ScaleCount(normalBase);
+        int armoredCount = ScaleCount(armoredBase);
+        int skeletonCount = ScaleCount(skeletonBase);
 
         // ПОРЯДОК СПАВНА:
         // 1. Слизни (быстро, интервал 0.5)
