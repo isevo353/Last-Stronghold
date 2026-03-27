@@ -21,6 +21,10 @@ public class StoryLevelManager : MonoBehaviour
 
     public bool CanStartWave(int currentWave)
     {
+        // Ограничение по maxWavesToWin нужно только для сюжетных уровней.
+        if (!IsStoryLevelScene())
+            return true;
+
         return !_isVictory && currentWave < maxWavesToWin;
     }
 
