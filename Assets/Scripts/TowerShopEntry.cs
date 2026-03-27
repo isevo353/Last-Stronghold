@@ -1,8 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Данные одного типа башни для магазина и размещения.
-/// </summary>
+
 [System.Serializable]
 public class TowerShopEntry
 {
