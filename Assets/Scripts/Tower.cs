@@ -143,6 +143,28 @@ public class Tower : MonoBehaviour
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Вражеский дебафф: если башня улучшена — понижает на 1 уровень.
+    /// Если уровень базовый — уничтожает башню без возврата денег.
+    /// </summary>
+    public void DowngradeOrDestroyByEnemy()
+    {
+        Debug.Log($"Башня {gameObject.name} получила приказ на уничтожение от слизня!");
+        if (_upgradeStep > 0)
+        {
+            _upgradeStep--;
+            ApplyUpgradeStats();
+            RefreshUpgradeSprite();
+            return;
+        }
+        if (_placedSlot != null)
+        {
+            _placedSlot.FreeSlot();
+        }
+
+        Destroy(gameObject);
+    }
+
     void CacheCombatBases()
     {
         _baseRange = range;

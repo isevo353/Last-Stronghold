@@ -3173,6 +3173,7 @@ MonoBehaviour:
   skeletonEnemyPrefab: {fileID: 0}
   skeletonKingEnemyPrefab: {fileID: 4530108797838014576, guid: 6f67fca19ce84db5aaf75e518e70131c, type: 3}
   teleportSkeletonEnemyPrefab: {fileID: 4530108797838014576, guid: 63abcb08a90244ccb9cb981ec5f071d8, type: 3}
+  saboteurSlimeEnemyPrefab: {fileID: 1404045744619977485, guid: 2394f07f8f4b499cb2356568e44d5f59, type: 3}
   waveNumber: 1
   spawnInterval: 1
 --- !u!4 &1550378494

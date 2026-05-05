@@ -110,7 +110,8 @@ public class MainMenuController : MonoBehaviour
 
     bool AreAllStoryLevelsCompleted()
     {
-        return AreFirstSixStoryLevelsCompleted();
+        return AreFirstSixStoryLevelsCompleted()
+            && PlayerPrefs.GetInt("StoryLevelCompleted_BonusLevel7Scene", 0) == 1;
     }
 
     bool AreFirstSixStoryLevelsCompleted()
@@ -139,15 +140,12 @@ public class MainMenuController : MonoBehaviour
         GameObject bonus = GameObject.Find("ButtonBONUS7");
         if (bonus == null) return;
 
-        Button bonusButton = bonus.GetComponent<Button>();
-        if (bonusButton == null) return;
-
         bool unlocked = AreFirstSixStoryLevelsCompleted();
-        bonusButton.interactable = unlocked;
+        bonus.SetActive(unlocked);
 
-        Text label = bonus.GetComponentInChildren<Text>();
-        if (label != null)
-            label.text = unlocked ? "БОНУС 7" : "БОНУС 7 (LOCKED)";
+        Button bonusButton = bonus.GetComponent<Button>();
+        if (bonusButton != null)
+            bonusButton.interactable = unlocked;
     }
 
     Transform FindButtonPanel()
