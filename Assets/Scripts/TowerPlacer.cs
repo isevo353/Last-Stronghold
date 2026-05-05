@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 
 public class TowerPlacer : MonoBehaviour
@@ -39,7 +40,12 @@ public class TowerPlacer : MonoBehaviour
             ClearAllHighlights();
             if (Input.GetMouseButtonDown(1) && (EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject()))
             {
-                TrySellTowerUnderMouse();
+                TowerContextPanel.EnsureExists();
+                Tower under = GetTowerUnderMouse();
+                if (under != null)
+                    TowerContextPanel.ShowForTower(under);
+                else
+                    TowerContextPanel.HidePanel();
             }
             return;
         }
@@ -123,14 +129,15 @@ public class TowerPlacer : MonoBehaviour
         if (_lastHighlighted != null) { _lastHighlighted.ClearHighlight(); _lastHighlighted = null; }
     }
 
-    [Header("Sell")]
-    [Tooltip("Радиус области нажатия для продажи башни")]
-    public float sellClickRadius = 1f;
+    [Header("ПКМ по башне")]
+    [Tooltip("Радиус выбора башни под курсором")]
+    [FormerlySerializedAs("sellClickRadius")]
+    public float towerClickRadius = 1f;
 
-    void TrySellTowerUnderMouse()
+    Tower GetTowerUnderMouse()
     {
         Vector2 w = GetMouseWorld();
-        var hits = Physics2D.OverlapCircleAll(w, sellClickRadius);
+        var hits = Physics2D.OverlapCircleAll(w, towerClickRadius);
         Tower closest = null;
         float bestDist = float.MaxValue;
         foreach (var c in hits)
@@ -144,16 +151,7 @@ public class TowerPlacer : MonoBehaviour
                 closest = t;
             }
         }
-        if (closest == null) return;
-
-        int refund = closest.PlacedCost / 2;
-        if (GameManager.Instance != null)
-            GameManager.Instance.AddMoney(refund);
-
-        if (closest.PlacedSlot != null)
-            closest.PlacedSlot.FreeSlot();
-
-        Destroy(closest.gameObject);
+        return closest;
     }
 
     void EnsureGhost()
