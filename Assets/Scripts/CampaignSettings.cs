@@ -71,6 +71,24 @@ public class CampaignSettings : ScriptableObject
         [Tooltip("Skeleton count step per interval")]
         public int skeletonGrowthStep = 1;
 
+        [Tooltip("Skeleton King start wave (inclusive)")]
+        public int skeletonKingStartWave = 999;
+        [Tooltip("Skeleton King count at start wave")]
+        public int skeletonKingCountAtStart = 0;
+        [Tooltip("Increase Skeleton King count every N waves")]
+        public int skeletonKingIntervalWaves = 1;
+        [Tooltip("Skeleton King count step per interval")]
+        public int skeletonKingGrowthStep = 1;
+
+        [Tooltip("Teleport Skeleton start wave (inclusive)")]
+        public int teleportSkeletonStartWave = 999;
+        [Tooltip("Teleport Skeleton count at start wave")]
+        public int teleportSkeletonCountAtStart = 0;
+        [Tooltip("Increase Teleport Skeleton count every N waves")]
+        public int teleportSkeletonIntervalWaves = 1;
+        [Tooltip("Teleport Skeleton count step per interval")]
+        public int teleportSkeletonGrowthStep = 1;
+
         [Header("Towers (optional)")]
         [Tooltip("Свой ассет цен улучшений для этой сцены. Пусто — берутся поля Tower upgrades из CampaignSettings.")]
         public TowerLevelBalance towerLevelBalance;

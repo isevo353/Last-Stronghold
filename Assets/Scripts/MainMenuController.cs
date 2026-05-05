@@ -6,10 +6,14 @@ using UnityEngine.UI;
 public class MainMenuController : MonoBehaviour
 {
     private GameObject _storyDonePanel;
+    private const int StoryLevelCount = 6;
 
     void Start()
     {
         if (SceneManager.GetActiveScene().name != "StoryMenuScene") return;
+
+        EnsureExtendedStoryButtons();
+        UpdateBonusButtonState();
 
         if (AreAllStoryLevelsCompleted())
         {
@@ -52,6 +56,33 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene("Level3Scene");
     }
 
+    public void LoadLevel4()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Level4Scene");
+    }
+
+    public void LoadLevel5()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Level5Scene");
+    }
+
+    public void LoadLevel6()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Level6Scene");
+    }
+
+    public void LoadBonusLevel7()
+    {
+        if (!AreFirstSixStoryLevelsCompleted())
+            return;
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("BonusLevel7Scene");
+    }
+
     public void BackToMenu()
     {
         Time.timeScale = 1f;
@@ -79,9 +110,77 @@ public class MainMenuController : MonoBehaviour
 
     bool AreAllStoryLevelsCompleted()
     {
-        return PlayerPrefs.GetInt("StoryLevelCompleted_Level1Scene", 0) == 1
-            && PlayerPrefs.GetInt("StoryLevelCompleted_Level2Scene", 0) == 1
-            && PlayerPrefs.GetInt("StoryLevelCompleted_Level3Scene", 0) == 1;
+        return AreFirstSixStoryLevelsCompleted()
+            && PlayerPrefs.GetInt("StoryLevelCompleted_BonusLevel7Scene", 0) == 1;
+    }
+
+    bool AreFirstSixStoryLevelsCompleted()
+    {
+        for (int i = 1; i <= StoryLevelCount; i++)
+        {
+            if (PlayerPrefs.GetInt($"StoryLevelCompleted_Level{i}Scene", 0) != 1)
+                return false;
+        }
+        return true;
+    }
+
+    void EnsureExtendedStoryButtons()
+    {
+        Transform panel = FindButtonPanel();
+        if (panel == null) return;
+
+        CreateLevelButtonIfMissing(panel, "ButtonLVL4", "4 УРОВЕНЬ", new Vector2(-220f, -40f), LoadLevel4);
+        CreateLevelButtonIfMissing(panel, "ButtonLVL5", "5 УРОВЕНЬ", new Vector2(0f, -40f), LoadLevel5);
+        CreateLevelButtonIfMissing(panel, "ButtonLVL6", "6 УРОВЕНЬ", new Vector2(220f, -40f), LoadLevel6);
+        CreateLevelButtonIfMissing(panel, "ButtonBONUS7", "БОНУС 7", new Vector2(0f, -140f), LoadBonusLevel7);
+    }
+
+    void UpdateBonusButtonState()
+    {
+        GameObject bonus = GameObject.Find("ButtonBONUS7");
+        if (bonus == null) return;
+
+        Button bonusButton = bonus.GetComponent<Button>();
+        if (bonusButton == null) return;
+
+        bool unlocked = AreFirstSixStoryLevelsCompleted();
+        bonusButton.interactable = unlocked;
+
+        Text label = bonus.GetComponentInChildren<Text>();
+        if (label != null)
+            label.text = unlocked ? "БОНУС 7" : "БОНУС 7 (LOCKED)";
+    }
+
+    Transform FindButtonPanel()
+    {
+        GameObject panel = GameObject.Find("mainmenupanel");
+        return panel != null ? panel.transform : null;
+    }
+
+    void CreateLevelButtonIfMissing(Transform parent, string objectName, string label, Vector2 anchoredPosition, UnityEngine.Events.UnityAction onClick)
+    {
+        if (parent.Find(objectName) != null) return;
+
+        Transform template = parent.Find("ButtonLVL1");
+        if (template == null) return;
+
+        GameObject clone = Instantiate(template.gameObject, parent);
+        clone.name = objectName;
+
+        RectTransform rect = clone.GetComponent<RectTransform>();
+        if (rect != null)
+            rect.anchoredPosition = anchoredPosition;
+
+        Text text = clone.GetComponentInChildren<Text>();
+        if (text != null)
+            text.text = label;
+
+        Button button = clone.GetComponent<Button>();
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(onClick);
+        }
     }
 
     GameObject BuildStoryCompletedPanel()

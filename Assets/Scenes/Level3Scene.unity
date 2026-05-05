@@ -3523,6 +3523,8 @@ MonoBehaviour:
   armoredEnemyPrefab: {fileID: 2888199315189264973, guid: ee7f4ae02d684fb4aa956dde9ed85360, type: 3}
   slimeEnemyPrefab: {fileID: 1404045744619977485, guid: e9f76d5db598e0f4981a166eaf7764b8, type: 3}
   skeletonEnemyPrefab: {fileID: 4530108797838014576, guid: cc2b680d4e19b9243b5c456779c5c7fa, type: 3}
+  skeletonKingEnemyPrefab: {fileID: 4530108797838014576, guid: 6f67fca19ce84db5aaf75e518e70131c, type: 3}
+  teleportSkeletonEnemyPrefab: {fileID: 4530108797838014576, guid: 63abcb08a90244ccb9cb981ec5f071d8, type: 3}
   waveNumber: 1
   spawnInterval: 1
 --- !u!4 &1550378494

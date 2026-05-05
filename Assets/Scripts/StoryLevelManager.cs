@@ -16,7 +16,13 @@ public class StoryLevelManager : MonoBehaviour
     public static bool IsStoryLevelScene()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        return sceneName == "Level1Scene" || sceneName == "Level2Scene" || sceneName == "Level3Scene";
+        return sceneName == "Level1Scene"
+            || sceneName == "Level2Scene"
+            || sceneName == "Level3Scene"
+            || sceneName == "Level4Scene"
+            || sceneName == "Level5Scene"
+            || sceneName == "Level6Scene"
+            || sceneName == "BonusLevel7Scene";
     }
 
     public bool CanStartWave(int currentWave)

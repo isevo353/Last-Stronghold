@@ -10,6 +10,8 @@ public class EnemySpawner : MonoBehaviour
     public GameObject armoredEnemyPrefab;
     public GameObject slimeEnemyPrefab;
     public GameObject skeletonEnemyPrefab;
+    public GameObject skeletonKingEnemyPrefab;
+    public GameObject teleportSkeletonEnemyPrefab;
 
     [Header("Wave Settings")]
     public int waveNumber = 1;
@@ -142,10 +144,34 @@ public class EnemySpawner : MonoBehaviour
             skeletonBase = Mathf.Max(0, waveNumber >= 3 ? 1 + (waveNumber - 3) / 2 : 0);
         }
 
+        int skeletonKingBase = 0;
+        if (_levelSettings != null)
+        {
+            if (waveNumber >= _levelSettings.skeletonKingStartWave)
+            {
+                int interval = Mathf.Max(1, _levelSettings.skeletonKingIntervalWaves);
+                int steps = (waveNumber - _levelSettings.skeletonKingStartWave) / interval;
+                skeletonKingBase = Mathf.Max(0, _levelSettings.skeletonKingCountAtStart + steps * _levelSettings.skeletonKingGrowthStep);
+            }
+        }
+
+        int teleportSkeletonBase = 0;
+        if (_levelSettings != null)
+        {
+            if (waveNumber >= _levelSettings.teleportSkeletonStartWave)
+            {
+                int interval = Mathf.Max(1, _levelSettings.teleportSkeletonIntervalWaves);
+                int steps = (waveNumber - _levelSettings.teleportSkeletonStartWave) / interval;
+                teleportSkeletonBase = Mathf.Max(0, _levelSettings.teleportSkeletonCountAtStart + steps * _levelSettings.teleportSkeletonGrowthStep);
+            }
+        }
+
         int slimeCount = ScaleCount(slimeBase);
         int normalCount = ScaleCount(normalBase);
         int armoredCount = ScaleCount(armoredBase);
         int skeletonCount = ScaleCount(skeletonBase);
+        int skeletonKingCount = ScaleCount(skeletonKingBase);
+        int teleportSkeletonCount = ScaleCount(teleportSkeletonBase);
 
         // ПОРЯДОК СПАВНА:
         // 1. Слизни (быстро, интервал 0.5)
@@ -179,6 +205,24 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < skeletonCount; i++)
         {
             TrySpawn(skeletonEnemyPrefab, "Skeleton");
+            yield return new WaitForSeconds(2f);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 5. Король-скелет (редкий, интервал 2.5)
+        for (int i = 0; i < skeletonKingCount; i++)
+        {
+            TrySpawn(skeletonKingEnemyPrefab, "SkeletonKing");
+            yield return new WaitForSeconds(2.5f);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 6. Телепорт-скелет (интервал 2)
+        for (int i = 0; i < teleportSkeletonCount; i++)
+        {
+            TrySpawn(teleportSkeletonEnemyPrefab, "TeleportSkeleton");
             yield return new WaitForSeconds(2f);
         }
 
