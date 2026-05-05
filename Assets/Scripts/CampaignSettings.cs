@@ -89,6 +89,15 @@ public class CampaignSettings : ScriptableObject
         [Tooltip("Teleport Skeleton count step per interval")]
         public int teleportSkeletonGrowthStep = 1;
 
+        [Tooltip("Saboteur Slime start wave (inclusive)")]
+        public int saboteurSlimeStartWave = 999;
+        [Tooltip("Saboteur Slime count at start wave")]
+        public int saboteurSlimeCountAtStart = 0;
+        [Tooltip("Increase Saboteur Slime count every N waves")]
+        public int saboteurSlimeIntervalWaves = 1;
+        [Tooltip("Saboteur Slime count step per interval")]
+        public int saboteurSlimeGrowthStep = 1;
+
         [Header("Towers (optional)")]
         [Tooltip("Свой ассет цен улучшений для этой сцены. Пусто — берутся поля Tower upgrades из CampaignSettings.")]
         public TowerLevelBalance towerLevelBalance;

@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject skeletonEnemyPrefab;
     public GameObject skeletonKingEnemyPrefab;
     public GameObject teleportSkeletonEnemyPrefab;
+    public GameObject saboteurSlimeEnemyPrefab;
 
     [Header("Wave Settings")]
     public int waveNumber = 1;
@@ -172,6 +173,17 @@ public class EnemySpawner : MonoBehaviour
         int skeletonCount = ScaleCount(skeletonBase);
         int skeletonKingCount = ScaleCount(skeletonKingBase);
         int teleportSkeletonCount = ScaleCount(teleportSkeletonBase);
+        int saboteurSlimeBase = 0;
+        if (_levelSettings != null)
+        {
+            if (waveNumber >= _levelSettings.saboteurSlimeStartWave)
+            {
+                int interval = Mathf.Max(1, _levelSettings.saboteurSlimeIntervalWaves);
+                int steps = (waveNumber - _levelSettings.saboteurSlimeStartWave) / interval;
+                saboteurSlimeBase = Mathf.Max(0, _levelSettings.saboteurSlimeCountAtStart + steps * _levelSettings.saboteurSlimeGrowthStep);
+            }
+        }
+        int saboteurSlimeCount = ScaleCount(saboteurSlimeBase);
 
         // ПОРЯДОК СПАВНА:
         // 1. Слизни (быстро, интервал 0.5)
@@ -223,6 +235,15 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < teleportSkeletonCount; i++)
         {
             TrySpawn(teleportSkeletonEnemyPrefab, "TeleportSkeleton");
+            yield return new WaitForSeconds(2f);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 7. Слизень-диверсант
+        for (int i = 0; i < saboteurSlimeCount; i++)
+        {
+            TrySpawn(saboteurSlimeEnemyPrefab, "SaboteurSlime");
             yield return new WaitForSeconds(2f);
         }
 

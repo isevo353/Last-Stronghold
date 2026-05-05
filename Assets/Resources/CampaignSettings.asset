@@ -64,6 +64,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level1Scene
     maxWavesToWin: 7
@@ -95,6 +99,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level2Scene
     maxWavesToWin: 7
@@ -126,6 +134,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level3Scene
     maxWavesToWin: 7
@@ -157,6 +169,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level4Scene
     maxWavesToWin: 7
@@ -188,6 +204,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level5Scene
     maxWavesToWin: 7
@@ -219,6 +239,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: Level6Scene
     maxWavesToWin: 7
@@ -250,6 +274,10 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}
   - sceneName: BonusLevel7Scene
     maxWavesToWin: 7
@@ -282,4 +310,8 @@ MonoBehaviour:
     teleportSkeletonCountAtStart: 0
     teleportSkeletonIntervalWaves: 1
     teleportSkeletonGrowthStep: 1
+    saboteurSlimeStartWave: 999
+    saboteurSlimeCountAtStart: 0
+    saboteurSlimeIntervalWaves: 1
+    saboteurSlimeGrowthStep: 1
     towerLevelBalance: {fileID: 0}

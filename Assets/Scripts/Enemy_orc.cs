@@ -168,7 +168,7 @@ public class TestEnemy : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Die()
     {
         Debug.Log("Орк умер!");
 
