@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+
 [CreateAssetMenu(fileName = "CampaignSettings", menuName = "LastStronghold/Campaign Settings")]
 public class CampaignSettings : ScriptableObject
 {
@@ -69,6 +70,10 @@ public class CampaignSettings : ScriptableObject
         public int skeletonIntervalWaves = 2; 
         [Tooltip("Skeleton count step per interval")]
         public int skeletonGrowthStep = 1;
+
+        [Header("Towers (optional)")]
+        [Tooltip("Свой ассет цен улучшений для этой сцены. Пусто — берутся поля Tower upgrades из CampaignSettings.")]
+        public TowerLevelBalance towerLevelBalance;
     }
 
     public int defaultMaxWavesToWin = 10;
@@ -82,6 +87,14 @@ public class CampaignSettings : ScriptableObject
     public float defaultEnemyHealthMultiplier = 1f;
     public float defaultEnemySpeedMultiplier = 1f;
     public float defaultEnemyCountMultiplier = 1f;
+
+    [Header("Tower upgrades (2 steps)")]
+    [Tooltip("Если для башни нет записи в towerUpgradePrices, используются эти цены")]
+    public int defaultFirstUpgradeCost = 30;
+    public int defaultSecondUpgradeCost = 50;
+
+    [Tooltip("Глобальные цены (если у уровня не задан Tower Level Balance)")]
+    public TowerUpgradePriceEntry[] towerUpgradePrices;
 
     public LevelSettings[] levelSettings;
     public LevelSettings GetSettingsForScene(string sceneName)
@@ -120,5 +133,41 @@ public class CampaignSettings : ScriptableObject
         data.enemySpeedMultiplier = level.enemySpeedMultiplier;
         data.enemyCountMultiplier = level.enemyCountMultiplier;
         return data;
+    }
+
+    /// <summary>Две цены улучшения для башни с ключом towerKey (совпадение без учёта регистра).</summary>
+    public int[] GetUpgradeCostsForTower(string towerKey)
+    {
+        int a = Mathf.Max(0, defaultFirstUpgradeCost);
+        int b = Mathf.Max(0, defaultSecondUpgradeCost);
+
+        if (!string.IsNullOrEmpty(towerKey) && towerUpgradePrices != null)
+        {
+            for (int i = 0; i < towerUpgradePrices.Length; i++)
+            {
+                TowerUpgradePriceEntry e = towerUpgradePrices[i];
+                if (e == null || string.IsNullOrEmpty(e.towerKey))
+                    continue;
+                if (string.Equals(e.towerKey, towerKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    a = Mathf.Max(0, e.firstUpgradeCost);
+                    b = Mathf.Max(0, e.secondUpgradeCost);
+                    break;
+                }
+            }
+        }
+
+        return new int[2] { a, b };
+    }
+
+    /// <summary>
+    /// Учитывает <see cref="LevelSettings.towerLevelBalance"/> для текущей сцены, иначе глобальные цены.
+    /// </summary>
+    public int[] GetUpgradeCostsForSceneTower(string sceneName, string towerKey)
+    {
+        LevelSettings lev = GetSettingsForScene(sceneName);
+        if (lev != null && lev.towerLevelBalance != null)
+            return lev.towerLevelBalance.GetUpgradeCostsForTower(towerKey);
+        return GetUpgradeCostsForTower(towerKey);
     }
 }
