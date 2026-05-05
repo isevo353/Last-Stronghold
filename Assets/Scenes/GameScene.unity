@@ -4281,7 +4281,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   ghostRoot: {fileID: 0}
   ghostSprite: {fileID: 0}
-  sellClickRadius: 1
+  towerClickRadius: 1
 --- !u!4 &1797946604
 Transform:
   m_ObjectHideFlags: 0
