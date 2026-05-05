@@ -110,8 +110,7 @@ public class MainMenuController : MonoBehaviour
 
     bool AreAllStoryLevelsCompleted()
     {
-        return AreFirstSixStoryLevelsCompleted()
-            && PlayerPrefs.GetInt("StoryLevelCompleted_BonusLevel7Scene", 0) == 1;
+        return AreFirstSixStoryLevelsCompleted();
     }
 
     bool AreFirstSixStoryLevelsCompleted()
