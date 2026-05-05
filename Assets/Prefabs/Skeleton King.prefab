@@ -187,16 +187,48 @@ PrefabInstance:
     m_TransformParent: {fileID: 2625702595837696489}
     m_Modifications:
     - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.025
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.035
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 5322681362350151929, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3.2
+      value: 3.75
       objectReference: {fileID: 0}
     - target: {fileID: 6986541335727060007, guid: 06b475a988cd62a4c9a01b648a86f5d7, type: 3}
       propertyPath: m_Name
