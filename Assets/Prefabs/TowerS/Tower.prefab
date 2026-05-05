@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5967881197130852053}
   - component: {fileID: 7809161304990606860}
   - component: {fileID: 8715902978490488}
+  - component: {fileID: 1122334455667788000}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -84,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 2bc84430b781b814abc794f593bd481f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: defebd30b7d2e4bff960711bed04e54f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -142,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2a0f55c1b03fb418bc203f95b6c051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
+  campaignTowerId: 
   range: 4.5
   fireCooldown: 0.5
   enemyLayer:
@@ -149,6 +151,28 @@ MonoBehaviour:
     m_Bits: 8
   projectilePrefab: {fileID: 2599626177099514107, guid: d7748c7ea2be2dc4a9cb98405166b21e, type: 3}
   shootPoint: {fileID: 0}
+  upgradeCosts: 1e00000032000000
+  rangeBonusPerStep: 0.12
+  fireCooldownReductionPerStep: 0.1
+  projectileDamageBonusPerStep: 0.15
+  upgradeVisuals: {fileID: 1122334455667788000}
+--- !u!114 &1122334455667788000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539710460538733160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7e3b2c19d4f4a6e8b0c1d2e3f4a5b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerUpgradeVisuals
+  targetRenderer: {fileID: 5967881197130852053}
+  spritesByLevel:
+  - {fileID: 21300000, guid: defebd30b7d2e4bff960711bed04e54f, type: 3}
+  - {fileID: 21300000, guid: 1afe493e049254cfc884ffa58152ca50, type: 3}
+  - {fileID: 21300000, guid: ba6e4899ce2184481b037df5cb76ef31, type: 3}
 --- !u!1 &1678667132904779279
 GameObject:
   m_ObjectHideFlags: 0
