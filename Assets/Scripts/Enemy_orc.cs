@@ -196,6 +196,35 @@ public class TestEnemy : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, 1f);
     }
+
+    public void SetMovementEnabled(bool enabled)
+    {
+        canMove = enabled;
+    }
+
+    public void SetPathProgress(int waypointIndex, bool snapToWaypoint)
+    {
+        if (waypoints == null || waypoints.Count == 0)
+            return;
+
+        int clampedIndex = Mathf.Clamp(waypointIndex, 0, waypoints.Count - 1);
+        currentWaypointIndex = clampedIndex;
+
+        if (snapToWaypoint)
+            transform.position = waypoints[clampedIndex].position;
+    }
+
+    public int GetWaypointCount()
+    {
+        return waypoints != null ? waypoints.Count : 0;
+    }
+
+    public void RefreshHealthBar()
+    {
+        if (healthBar != null)
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+    }
+
 System.Collections.IEnumerator DamageFlash()
     {
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
