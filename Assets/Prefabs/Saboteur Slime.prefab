@@ -174,11 +174,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c86ce1f5b74b87a2f7ce88fa1b33a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaboteurSlime
-  sabotageRange: 0.8
-  towerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  health: 140
+  sabotageRadius: 3
+  stopDuration: 0.2
+  stopDuringSabotage: 1
 --- !u!1001 &700000000000000001
 PrefabInstance:
   m_ObjectHideFlags: 0
