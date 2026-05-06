@@ -28,14 +28,15 @@ public class MainMenuController : MonoBehaviour
         Debug.Log("Play Game");
         Time.timeScale = 1f;
         SceneManager.LoadScene("GameScene");
+
     }
 
-  
+
     public void OpenStoryMenu()
     {
         Debug.Log("Открытие меню сюжета");
         Time.timeScale = 1f;
-        SceneManager.LoadScene("StoryMenuScene");
+        SceneManager.LoadScene("videoscene");
     }
 
     public void LoadLevel1()
