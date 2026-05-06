@@ -7,9 +7,11 @@ public class Projectile : MonoBehaviour
 
     Transform _target;
 
-    public void Init(Transform target)
+    public void Init(Transform target, int damageOverride = -1)
     {
         _target = target;
+        if (damageOverride >= 0)
+            damage = damageOverride;
     }
 
     void Update()

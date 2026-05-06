@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [Header("Spawner")]
     public EnemySpawner enemySpawner; // ← добавь ссылку
 
+    private StoryLevelManager _storyLevelManager;
     private int _currentWave = 0;
     private bool _waveActive = false;
 
@@ -34,10 +35,25 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        _storyLevelManager = FindObjectOfType<StoryLevelManager>();
+        if (_storyLevelManager == null && StoryLevelManager.IsStoryLevelScene())
+        {
+            _storyLevelManager = gameObject.AddComponent<StoryLevelManager>();
+        }
+
         if (startWaveButton != null)
             startWaveButton.onClick.AddListener(OnStartWavePressed);
 
+        if (enemySpawner != null)
+            enemySpawner.onWaveFinished += EndWave;
+
         UpdateUI();
+    }
+
+    void OnDestroy()
+    {
+        if (enemySpawner != null)
+            enemySpawner.onWaveFinished -= EndWave;
     }
 
     void Update()
@@ -47,9 +63,18 @@ public class UIManager : MonoBehaviour
 
     void OnStartWavePressed()
     {
+        if (_storyLevelManager != null && !_storyLevelManager.CanStartWave(_currentWave))
+        {
+            return;
+        }
+
         if (_waveActive)
         {
             Debug.Log("[UIManager] Волна уже начата!");
+            return;
+        }
+        if (PauseMenuController.IsPaused)
+        {
             return;
         }
 
@@ -60,21 +85,15 @@ public class UIManager : MonoBehaviour
 
         Debug.Log($"[UIManager] Начата волна {_currentWave}!");
 
-        // Запускаем спавнер
         if (enemySpawner != null)
-        {
             enemySpawner.StartSpawning();
-        }
 
-        // Волна длится 15 секунд, потом можно начать новую
-        Invoke(nameof(EndWave), 15f);
+        // Конец волны — по событию от спавнера (когда отспавнятся все враги), не по таймеру
     }
 
     void EndWave()
     {
         _waveActive = false;
-        startWaveButton.interactable = true;
-        startWaveButton.gameObject.SetActive(true); // ← кнопка появляется снова
 
         if (enemySpawner != null)
         {
@@ -82,6 +101,14 @@ public class UIManager : MonoBehaviour
         }
 
         Debug.Log($"[UIManager] Волна {_currentWave} закончена!");
+
+        if (_storyLevelManager != null && _storyLevelManager.TryHandleVictory(_currentWave))
+        {
+            return;
+        }
+
+        startWaveButton.interactable = true;
+        startWaveButton.gameObject.SetActive(true); // ← кнопка появляется снова
     }
 
     void UpdateUI()
@@ -89,13 +116,27 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance == null) return;
 
         if (moneyText != null)
-            moneyText.text = "Монеты: " + GameManager.Instance.GetMoney();
+            moneyText.text = "coins: " + GameManager.Instance.GetMoney();
 
-        if (livesText != null)
-            livesText.text = "Жизни: " + gate.currentHealth;
+        if (livesText != null && gate != null)
+            livesText.text = "HP gates: " + gate.currentHealth;
 
         if (waveText != null)
-            waveText.text = "Волна: " + _currentWave;
+            waveText.text = _storyLevelManager != null
+                ? $"wave: {_currentWave}/{_storyLevelManager.maxWavesToWin}"
+                : "wave: " + _currentWave;
+
+        // Обновляем состояние кнопки
+        if (startWaveButton != null && !_waveActive)
+        {
+            // Принудительно проверяем и восстанавливаем кнопку
+            if (!startWaveButton.gameObject.activeSelf)
+            {
+                Debug.LogWarning("[UIManager] Кнопка неактивна, хотя волна не активна! Восстанавливаем...");
+                startWaveButton.gameObject.SetActive(true);
+            }
+            startWaveButton.interactable = !PauseMenuController.IsPaused;
+        }
     }
 
     public bool IsWaveActive()

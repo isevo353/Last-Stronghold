@@ -1,83 +1,70 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+
+
 public class TowerSlot : MonoBehaviour
 {
-    [Header("Tower Settings")]
-    public GameObject towerPrefab;
-    public int towerCost = 50;
-
     [Header("Visuals")]
     public SpriteRenderer slotSprite;
     public TextMeshProUGUI costText;
+    public Color colorCanPlace = new Color(0.2f, 0.8f, 0.2f, 0.8f);
+    public Color colorOccupied = new Color(0.4f, 0.4f, 0.4f, 0.8f);
+    public Color colorDisabled = new Color(0.8f, 0.2f, 0.2f, 0.6f);
 
-    private bool isOccupied = false;
-    private Color originalColor;
+    private bool _occupied;
+    private Color _originalColor;
+
+    public bool IsOccupied => _occupied;
+    public Vector2 Position => transform.position;
 
     void Start()
     {
         if (slotSprite == null)
             slotSprite = GetComponent<SpriteRenderer>();
-
-        originalColor = slotSprite.color;
-
-        // Показываем цену
+        if (slotSprite != null)
+            _originalColor = slotSprite.color;
         if (costText != null)
-        {
-            costText.text = towerCost.ToString();
-            UpdateSlotColor();
-        }
+            costText.gameObject.SetActive(false);
+        ClearHighlight();
     }
 
-    void Update()
+    /// <summary>
+    /// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· TowerPlacer РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРµ Р±Р°С€РЅРё.
+    /// </summary>
+    public bool TryPlace(GameObject towerPrefab, int cost)
     {
-        // Обновляем цвет в зависимости от денег
-        UpdateSlotColor();
+        if (_occupied || towerPrefab == null) return false;
+        if (GameManager.Instance == null || !GameManager.Instance.TrySpendMoney(cost))
+            return false;
+
+        // Р”РµР»Р°РµРј Р±Р°С€РЅСЋ РґРѕС‡РµСЂРЅРµР№ СЃР»РѕС‚Сѓ, С‡С‚РѕР±С‹ РѕРЅР° РЅР°СЃР»РµРґРѕРІР°Р»Р° РјР°СЃС€С‚Р°Р± РєР»РµС‚РєРё
+        GameObject tower = Instantiate(towerPrefab, transform);
+        tower.transform.localPosition = Vector3.zero;
+        tower.transform.localRotation = Quaternion.identity;
+        Tower t = tower.GetComponent<Tower>();
+        if (t != null)
+            t.SetPlacedInfo(this, cost);
+        _occupied = true;
+        ClearHighlight();
+        return true;
     }
 
-    void UpdateSlotColor()
+    public void SetHighlight(bool canPlace)
     {
-        if (isOccupied)
-        {
-            slotSprite.color = Color.gray;
-
-            if (costText != null && costText.gameObject.activeSelf)
-            {
-                costText.gameObject.SetActive(false);
-                Debug.Log("Скрыл цену для занятого слота");
-            }
-        }
-        else
-        {
-            bool canAfford = GameManager.Instance != null &&
-                            GameManager.Instance.GetMoney() >= towerCost;
-
-            slotSprite.color = canAfford ? Color.green : Color.red;
-
-            if (costText != null && !costText.gameObject.activeSelf)
-            {
-                costText.gameObject.SetActive(true);
-            }
-
-            if (costText != null)
-            {
-                costText.color = canAfford ? Color.green : Color.red;
-            }
-        }
+        if (slotSprite == null || _occupied) return;
+        slotSprite.color = canPlace ? colorCanPlace : colorDisabled;
     }
-    void OnMouseDown()
-    {
-        if (!isOccupied && GameManager.Instance != null)
-        {
-            if (GameManager.Instance.TrySpendMoney(towerCost))
-            {
-                // Ставим башню
-                Instantiate(towerPrefab, transform.position, Quaternion.identity);
-                isOccupied = true;
-                UpdateSlotColor();
 
-                Debug.Log($"Башня построена за {towerCost} монет!");
-            }
-        }
+    public void ClearHighlight()
+    {
+        if (slotSprite == null) return;
+        slotSprite.color = _occupied ? colorOccupied : _originalColor;
+    }
+
+    /// <summary> РћСЃРІРѕР±РѕР¶РґР°РµС‚ СЃР»РѕС‚ РїРѕСЃР»Рµ РїСЂРѕРґР°Р¶Рё Р±Р°С€РЅРё. </summary>
+    public void FreeSlot()
+    {
+        _occupied = false;
+        ClearHighlight();
     }
 }

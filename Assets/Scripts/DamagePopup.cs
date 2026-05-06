@@ -19,15 +19,15 @@ public class DamagePopup : MonoBehaviour
     {
         timer += Time.deltaTime;
         
-        // Поднимаем вверх
+        
         transform.localPosition = startPosition + new Vector3(0, moveSpeed * timer, 0);
         
-        // Плавно исчезаем
+        
         Color color = damageText.color;
         color.a = 1f - (timer / lifeTime);
         damageText.color = color;
         
-        // Уничтожаем когда время вышло
+        
         if (timer >= lifeTime)
             Destroy(gameObject);
     }

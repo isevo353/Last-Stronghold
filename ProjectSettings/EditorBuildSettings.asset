@@ -17,9 +17,35 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 5c3d312612f0f0740a02c33955271c8c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/SettingsScene.unity
+    guid: 3ef8b8496c83c4b1ea5719ebae2ea9cc
+  - enabled: 1
+    path: Assets/Scenes/StoryMenuScene.unity
+    guid: 5d6d71a4e3a84d64b3c4bd5d1a3da7c2
+  - enabled: 1
+    path: Assets/Scenes/Level1Scene.unity
+    guid: 2b0f6a13c74b4c28af26b57ad2c1f3a9
+  - enabled: 1
+    path: Assets/Scenes/Level2Scene.unity
+    guid: 89d4c21f9ad34b0f94f3b1e2c6a58de1
+  - enabled: 1
+    path: Assets/Scenes/Level3Scene.unity
+    guid: c1a53e9b7f7c4cb6b4d2f16e8ab3d4f0
+  - enabled: 1
+    path: Assets/Scenes/Level4Scene.unity
+    guid: 95d3e0cbe46947d39e136f951e5afabd
+  - enabled: 1
+    path: Assets/Scenes/Level5Scene.unity
+    guid: 58eff93becf643da9731f3928ebb3c43
+  - enabled: 1
+    path: Assets/Scenes/Level6Scene.unity
+    guid: 06d475a09f9a4bb5865ec08a4933e0e4
+  - enabled: 1
+    path: Assets/Scenes/BonusLevel7Scene.unity
+    guid: 0b3f97ad1044481e9fed3a64c9ad6477
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  m_UseUCBPForAssetBundles: 0

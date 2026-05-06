@@ -17,14 +17,14 @@ public class PathManager : MonoBehaviour
         waypoints.Clear();
         foreach (Transform child in transform)
         {
-            // »щем все объекты с "Waypoint" в имени
+           
             if (child.name.Contains("Waypoint"))
             {
                 waypoints.Add(child);
             }
         }
 
-        // —ортируем по имени
+       
         waypoints.Sort((a, b) => a.name.CompareTo(b.name));
     }
 
