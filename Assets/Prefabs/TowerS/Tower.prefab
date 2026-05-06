@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: defebd30b7d2e4bff960711bed04e54f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3cbd575d4968745d3a7f79a654fae04a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -152,6 +152,11 @@ MonoBehaviour:
     m_Bits: 8
   projectilePrefab: {fileID: 2599626177099514107, guid: d7748c7ea2be2dc4a9cb98405166b21e, type: 3}
   shootPoint: {fileID: 0}
+  attackType: 0
+  beamBaseDps: 12
+  beamRampPerSecond: 0.45
+  beamMaxMultiplier: 3
+  beamLine: {fileID: 0}
   upgradeCosts: 1e00000032000000
   rangeBonusPerStep: 0.12
   fireCooldownReductionPerStep: 0.1
@@ -171,9 +176,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerUpgradeVisuals
   targetRenderer: {fileID: 5967881197130852053}
   spritesByLevel:
-  - {fileID: 21300000, guid: defebd30b7d2e4bff960711bed04e54f, type: 3}
-  - {fileID: 21300000, guid: 1afe493e049254cfc884ffa58152ca50, type: 3}
-  - {fileID: 21300000, guid: ba6e4899ce2184481b037df5cb76ef31, type: 3}
+  - {fileID: 21300000, guid: 3cbd575d4968745d3a7f79a654fae04a, type: 3}
+  - {fileID: 21300000, guid: e39c44d354e0a47ec89630128209e801, type: 3}
+  - {fileID: 21300000, guid: d0349d8d3a04044f7a4810157b116b14, type: 3}
 --- !u!50 &-1339875960854085211
 Rigidbody2D:
   serializedVersion: 5
