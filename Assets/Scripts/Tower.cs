@@ -4,6 +4,11 @@ using UnityEngine.SceneManagement;
 public class Tower : MonoBehaviour
 {
     public const int MaxUpgradeSteps = 2;
+    public enum AttackType
+    {
+        Projectile,
+        Beam
+    }
 
     [Tooltip("Ключ для CampaignSettings → towerUpgradePrices (если пусто — имя объекта / префаба без (Clone))")]
     public string campaignTowerId = "";
@@ -17,6 +22,19 @@ public class Tower : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform shootPoint;
 
+    [Header("Attack Mode")]
+    public AttackType attackType = AttackType.Projectile;
+
+    [Header("Beam Settings")]
+    [Tooltip("Урон в секунду в начале фокуса")]
+    public float beamBaseDps = 12f;
+    [Tooltip("Насколько быстро растет множитель урона во время непрерывного фокуса")]
+    public float beamRampPerSecond = 0.45f;
+    [Tooltip("Максимальный множитель урона луча")]
+    public float beamMaxMultiplier = 3f;
+    [Tooltip("Линия для визуала луча (LineRenderer)")]
+    public LineRenderer beamLine;
+
     [Header("Upgrades (fallback if CampaignSettings missing)")]
     [Tooltip("Used only when Resources/CampaignSettings is absent; otherwise prices come from the asset")]
     public int[] upgradeCosts = new int[2] { 30, 50 };
@@ -29,7 +47,7 @@ public class Tower : MonoBehaviour
     [Range(0f, 0.5f)]
     public float fireCooldownReductionPerStep = 0.1f;
 
-    [Tooltip("Projectile damage bonus per step (Projectile / SplashProjectile only)")]
+    [Tooltip("Бонус урона за шаг улучшения (снаряды и базовый DPS луча)")]
     [Range(0f, 1f)]
     public float projectileDamageBonusPerStep = 0.15f;
 
@@ -47,6 +65,12 @@ public class Tower : MonoBehaviour
     float _baseFireCooldown;
     int _baseProjectileDamage;
     bool _projectileDamageApplies;
+    float _baseBeamDps;
+    bool _combatBasesCached;
+
+    TestEnemy _beamTarget;
+    float _beamFocusTime;
+    float _beamDamageRemainder;
 
     void Awake()
     {
@@ -110,6 +134,8 @@ public class Tower : MonoBehaviour
 
     public bool TryUpgrade()
     {
+        EnsureCombatBasesCached();
+
         if (!CanUpgrade)
             return false;
         int cost = GetUpgradeCost();
@@ -144,23 +170,24 @@ public class Tower : MonoBehaviour
     }
 
     /// <summary>
-    /// Вражеский дебафф: если башня улучшена — понижает на 1 уровень.
-    /// Если уровень базовый — уничтожает башню без возврата денег.
+    /// Вызывается врагом-саботажником: снимает 1 апгрейд, а если апгрейдов нет — уничтожает башню без возврата денег.
     /// </summary>
     public void DowngradeOrDestroyByEnemy()
     {
-        Debug.Log($"Башня {gameObject.name} получила приказ на уничтожение от слизня!");
         if (_upgradeStep > 0)
         {
             _upgradeStep--;
+
+            if (upgradeCosts != null && _upgradeStep >= 0 && _upgradeStep < upgradeCosts.Length)
+                _totalInvested = Mathf.Max(_placedCost, _totalInvested - upgradeCosts[_upgradeStep]);
+
             ApplyUpgradeStats();
             RefreshUpgradeSprite();
             return;
         }
+
         if (_placedSlot != null)
-        {
             _placedSlot.FreeSlot();
-        }
 
         Destroy(gameObject);
     }
@@ -169,6 +196,7 @@ public class Tower : MonoBehaviour
     {
         _baseRange = range;
         _baseFireCooldown = fireCooldown;
+        _baseBeamDps = beamBaseDps;
         _baseProjectileDamage = 0;
         _projectileDamageApplies = false;
         if (projectilePrefab == null)
@@ -188,6 +216,14 @@ public class Tower : MonoBehaviour
             _baseProjectileDamage = splash.damage;
             _projectileDamageApplies = true;
         }
+
+        _combatBasesCached = true;
+    }
+
+    void EnsureCombatBasesCached()
+    {
+        if (!_combatBasesCached)
+            CacheCombatBases();
     }
 
     void ApplyUpgradeStats()
@@ -195,6 +231,7 @@ public class Tower : MonoBehaviour
         range = _baseRange * (1f + rangeBonusPerStep * _upgradeStep);
         float cdMul = 1f - fireCooldownReductionPerStep * _upgradeStep;
         fireCooldown = Mathf.Max(0.05f, _baseFireCooldown * Mathf.Max(0.2f, cdMul));
+        beamBaseDps = Mathf.Max(0.1f, _baseBeamDps * (1f + projectileDamageBonusPerStep * _upgradeStep));
     }
 
     int GetCurrentProjectileDamage()
@@ -207,6 +244,8 @@ public class Tower : MonoBehaviour
 
     void Start()
     {
+        EnsureCombatBasesCached();
+
         if (shootPoint == null)
         {
             shootPoint = transform.Find("shootPoint");
@@ -217,17 +256,29 @@ public class Tower : MonoBehaviour
             }
         }
 
+        if (beamLine != null)
+            beamLine.enabled = false;
+
         RefreshUpgradeSprite();
     }
 
     void Update()
     {
+        EnsureCombatBasesCached();
+
+        if (attackType == AttackType.Beam)
+        {
+            UpdateBeamAttack();
+            return;
+        }
+
         TestEnemy target = FindTarget();
-        if (target == null) return;
+        if (target == null)
+            return;
 
         if (Time.time >= _lastShotTime + fireCooldown)
         {
-            Shoot(target);
+            ShootProjectile(target);
             _lastShotTime = Time.time;
         }
     }
@@ -253,7 +304,7 @@ public class Tower : MonoBehaviour
         return best;
     }
 
-    void Shoot(TestEnemy target)
+    void ShootProjectile(TestEnemy target)
     {
         if (projectilePrefab == null || shootPoint == null) return;
 
@@ -276,12 +327,75 @@ public class Tower : MonoBehaviour
 
         SlowProjectile slow = go.GetComponent<SlowProjectile>();
         if (slow != null)
+        {
             slow.Init(target.transform);
+            return;
+        }
+
+        PoisonStopProjectile poisonStop = go.GetComponent<PoisonStopProjectile>();
+        if (poisonStop != null)
+            poisonStop.Init(target.transform);
+    }
+
+    void UpdateBeamAttack()
+    {
+        TestEnemy target = FindTarget();
+        if (target == null)
+        {
+            ResetBeamFocus();
+            return;
+        }
+
+        if (_beamTarget != target)
+        {
+            _beamTarget = target;
+            _beamFocusTime = 0f;
+            _beamDamageRemainder = 0f;
+        }
+        else
+        {
+            _beamFocusTime += Time.deltaTime;
+        }
+
+        float multiplier = Mathf.Min(beamMaxMultiplier, 1f + _beamFocusTime * beamRampPerSecond);
+        float damageThisFrame = beamBaseDps * multiplier * Time.deltaTime + _beamDamageRemainder;
+        int wholeDamage = Mathf.FloorToInt(damageThisFrame);
+        _beamDamageRemainder = damageThisFrame - wholeDamage;
+        if (wholeDamage > 0 && _beamTarget != null)
+            _beamTarget.TakeDamage(wholeDamage);
+
+        UpdateBeamVisual(_beamTarget);
+    }
+
+    void ResetBeamFocus()
+    {
+        _beamTarget = null;
+        _beamFocusTime = 0f;
+        _beamDamageRemainder = 0f;
+        if (beamLine != null)
+            beamLine.enabled = false;
+    }
+
+    void UpdateBeamVisual(TestEnemy target)
+    {
+        if (beamLine == null || shootPoint == null || target == null)
+            return;
+
+        beamLine.enabled = true;
+        beamLine.positionCount = 2;
+        beamLine.SetPosition(0, shootPoint.position);
+        beamLine.SetPosition(1, target.transform.position);
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, range);
+    }
+
+    void OnDisable()
+    {
+        if (beamLine != null)
+            beamLine.enabled = false;
     }
 }
