@@ -55,6 +55,14 @@ public class Tower : MonoBehaviour
     [Tooltip("Не обязателен: добавь компонент Tower Upgrade Visuals на башню и назначь спрайты там")]
     public TowerUpgradeVisuals upgradeVisuals;
 
+    [Header("Builder House Rules")]
+    [Tooltip("Отметь для домика строителя. Его уровень открывает улучшения обычных башен.")]
+    public bool isBuilderHouse;
+    [Tooltip("Для обычной башни: минимальный уровень домика для 1-го улучшения башни.")]
+    public int requiredBuilderHouseLevelForUpgrade1 = 1;
+    [Tooltip("Для обычной башни: минимальный уровень домика для 2-го улучшения башни.")]
+    public int requiredBuilderHouseLevelForUpgrade2 = 2;
+
     float _lastShotTime;
     int _placedCost;
     int _totalInvested;
@@ -88,6 +96,7 @@ public class Tower : MonoBehaviour
         CacheCombatBases();
         ApplyUpgradeStats();
         RefreshUpgradeSprite();
+        NotifyBuilderHouseLevelChanged();
     }
 
     void ApplyUpgradeCostsFromCampaign()
@@ -122,6 +131,7 @@ public class Tower : MonoBehaviour
 
     public int UpgradeStep => _upgradeStep;
     public bool CanUpgrade => _upgradeStep < MaxUpgradeSteps;
+    public bool IsBuilderHouse => isBuilderHouse;
 
     public int GetSellRefund() => _totalInvested / 2;
 
@@ -138,6 +148,8 @@ public class Tower : MonoBehaviour
 
         if (!CanUpgrade)
             return false;
+        if (!CanUpgradeUnlocked(out _))
+            return false;
         int cost = GetUpgradeCost();
         if (cost <= 0 || GameManager.Instance == null || !GameManager.Instance.TrySpendMoney(cost))
             return false;
@@ -146,7 +158,34 @@ public class Tower : MonoBehaviour
         _upgradeStep++;
         ApplyUpgradeStats();
         RefreshUpgradeSprite();
+        NotifyBuilderHouseLevelChanged();
         return true;
+    }
+
+    public bool CanUpgradeUnlocked(out string blockedReason)
+    {
+        blockedReason = "";
+        if (!CanUpgrade)
+        {
+            blockedReason = "Макс. уровень";
+            return false;
+        }
+
+        if (isBuilderHouse)
+            return true;
+
+        int requiredLevel = GetRequiredBuilderHouseLevelForNextUpgrade();
+        if (requiredLevel <= 0)
+            return true;
+
+        int houseLevel = BuilderHouseProgress.GetCurrentLevel();
+        if (houseLevel >= requiredLevel)
+            return true;
+
+        blockedReason = requiredLevel <= 1
+            ? "Нужен улучшенный домик строителя"
+            : $"Нужен домик строителя ур. {requiredLevel}";
+        return false;
     }
 
     void RefreshUpgradeSprite()
@@ -165,6 +204,9 @@ public class Tower : MonoBehaviour
 
         if (_placedSlot != null)
             _placedSlot.FreeSlot();
+
+        if (isBuilderHouse)
+            BuilderHouseProgress.UnregisterHouse(this);
 
         Destroy(gameObject);
     }
@@ -188,6 +230,9 @@ public class Tower : MonoBehaviour
 
         if (_placedSlot != null)
             _placedSlot.FreeSlot();
+
+        if (isBuilderHouse)
+            BuilderHouseProgress.UnregisterHouse(this);
 
         Destroy(gameObject);
     }
@@ -395,7 +440,23 @@ public class Tower : MonoBehaviour
 
     void OnDisable()
     {
+        if (isBuilderHouse)
+            BuilderHouseProgress.UnregisterHouse(this);
+
         if (beamLine != null)
             beamLine.enabled = false;
+    }
+
+    int GetRequiredBuilderHouseLevelForNextUpgrade()
+    {
+        if (_upgradeStep <= 0)
+            return Mathf.Max(0, requiredBuilderHouseLevelForUpgrade1);
+        return Mathf.Max(0, requiredBuilderHouseLevelForUpgrade2);
+    }
+
+    void NotifyBuilderHouseLevelChanged()
+    {
+        if (isBuilderHouse)
+            BuilderHouseProgress.RegisterOrUpdateHouse(this, _upgradeStep);
     }
 }
