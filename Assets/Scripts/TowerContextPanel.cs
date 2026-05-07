@@ -83,6 +83,11 @@ public class TowerContextPanel : MonoBehaviour
 
     public void Open(Tower tower)
     {
+        OpenAtScreenPosition(tower, Input.mousePosition);
+    }
+
+    public void OpenAtScreenPosition(Tower tower, Vector2 screenPosition)
+    {
         if (tower == null)
         {
             Close();
@@ -96,17 +101,23 @@ public class TowerContextPanel : MonoBehaviour
 
         _current = tower;
         _openedFrame = Time.frameCount;
+        ApplyCurrentButtonsVisibility();
         SetVisible(true);
         EnsurePanelDrawsOnTop();
         RefreshLabels();
-        PositionNearMouse();
+        PositionNearTower();
     }
 
     public static void ShowForTower(Tower tower)
     {
+        ShowForTowerAtScreenPosition(tower, Input.mousePosition);
+    }
+
+    public static void ShowForTowerAtScreenPosition(Tower tower, Vector2 screenPosition)
+    {
         EnsureExists();
         if (Instance != null)
-            Instance.Open(tower);
+            Instance.OpenAtScreenPosition(tower, screenPosition);
     }
 
     public static void HidePanel()
@@ -127,7 +138,7 @@ public class TowerContextPanel : MonoBehaviour
             panelRoot.gameObject.SetActive(v);
     }
 
-    void PositionNearMouse()
+    void PositionNearScreenPoint(Vector2 screenPoint)
     {
         if (panelRoot == null)
             return;
@@ -146,69 +157,31 @@ public class TowerContextPanel : MonoBehaviour
             return;
 
         Camera uiCam = GetUICameraForCanvas(canvas);
-        Camera gameCam = GetGameViewCamera();
 
         panelRoot.anchorMin = panelRoot.anchorMax = new Vector2(0.5f, 0.5f);
         panelRoot.pivot = new Vector2(0f, 1f);
 
-        Vector2 mouse = Input.mousePosition;
         const float pad = 12f;
-        Vector2 pivotScreen = new Vector2(mouse.x + pad, mouse.y - pad);
+        Vector2 pivotScreen = new Vector2(screenPoint.x + pad, screenPoint.y + pad);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, pivotScreen, uiCam, out Vector2 localPt);
+        panelRoot.anchoredPosition = localPt;
 
-        const float edgePad = 10f;
-        Rect valid = canvas.pixelRect;
-        Rect safe = Screen.safeArea;
-        valid = IntersectRects(valid, safe);
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
 
-        for (int iter = 0; iter < 8; iter++)
-        {
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
+        float width = panelRoot.rect.width;
+        float height = panelRoot.rect.height;
+        Rect r = canvasRt.rect;
+        const float edgePad = 8f;
+        float minX = r.xMin + edgePad;
+        float maxX = r.xMax - width - edgePad;
+        float minY = r.yMin + height + edgePad;
+        float maxY = r.yMax - edgePad;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, pivotScreen, uiCam, out Vector2 localPt);
-            panelRoot.anchoredPosition = localPt;
-
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(panelRoot);
-
-            GetPanelScreenBounds(panelRoot, gameCam, out float minX, out float maxX, out float minY, out float maxY);
-
-            float dx = 0f;
-            if (maxX - minX > valid.width - 2f * edgePad)
-                dx = valid.xMin + edgePad - minX;
-            else
-            {
-                if (minX + dx < valid.xMin + edgePad)
-                    dx += valid.xMin + edgePad - (minX + dx);
-                if (maxX + dx > valid.xMax - edgePad)
-                    dx += valid.xMax - edgePad - (maxX + dx);
-            }
-
-            float dy = 0f;
-            if (maxY - minY > valid.height - 2f * edgePad)
-                dy = valid.yMin + edgePad - minY;
-            else
-            {
-                if (minY + dy < valid.yMin + edgePad)
-                    dy += valid.yMin + edgePad - (minY + dy);
-                if (maxY + dy > valid.yMax - edgePad)
-                    dy += valid.yMax - edgePad - (maxY + dy);
-            }
-
-            if (Mathf.Abs(dx) < 0.25f && Mathf.Abs(dy) < 0.25f)
-                break;
-
-            pivotScreen.x += dx;
-            pivotScreen.y += dy;
-        }
-
-        GetPanelScreenBounds(panelRoot, gameCam, out float mx, out float Mx, out float my, out float My);
-        if (float.IsNaN(mx) || Mx - mx < 4f || My - my < 4f || valid.width < 8f || valid.height < 8f)
-        {
-            Vector2 fallback = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, fallback, uiCam, out Vector2 localCenter);
-            panelRoot.anchoredPosition = localCenter;
-        }
+        panelRoot.anchoredPosition = new Vector2(
+            Mathf.Clamp(panelRoot.anchoredPosition.x, minX, maxX),
+            Mathf.Clamp(panelRoot.anchoredPosition.y, minY, maxY)
+        );
     }
 
     static Camera GetGameViewCamera()
@@ -216,34 +189,6 @@ public class TowerContextPanel : MonoBehaviour
         if (TowerPlacer.Instance != null && TowerPlacer.Instance.cam != null)
             return TowerPlacer.Instance.cam;
         return Camera.main;
-    }
-
-    static Rect IntersectRects(Rect a, Rect b)
-    {
-        float xMin = Mathf.Max(a.xMin, b.xMin);
-        float yMin = Mathf.Max(a.yMin, b.yMin);
-        float xMax = Mathf.Min(a.xMax, b.xMax);
-        float yMax = Mathf.Min(a.yMax, b.yMax);
-        if (xMin >= xMax || yMin >= yMax)
-            return a;
-        return Rect.MinMaxRect(xMin, yMin, xMax, yMax);
-    }
-
-    static void GetPanelScreenBounds(RectTransform panel, Camera screenCam, out float minX, out float maxX, out float minY, out float maxY)
-    {
-        Vector3[] wc = new Vector3[4];
-        panel.GetWorldCorners(wc);
-        minX = minY = float.MaxValue;
-        maxX = maxY = float.MinValue;
-        Camera cam = screenCam != null ? screenCam : Camera.main;
-        for (int i = 0; i < 4; i++)
-        {
-            Vector2 sp = RectTransformUtility.WorldToScreenPoint(cam, wc[i]);
-            minX = Mathf.Min(minX, sp.x);
-            maxX = Mathf.Max(maxX, sp.x);
-            minY = Mathf.Min(minY, sp.y);
-            maxY = Mathf.Max(maxY, sp.y);
-        }
     }
 
     static Camera GetUICameraForCanvas(Canvas canvas)
@@ -259,13 +204,16 @@ public class TowerContextPanel : MonoBehaviour
 
     void RefreshLabels()
     {
-        if (_current == null || sellLabel == null || upgradeLabel == null || upgradeButton == null)
+        if (_current == null || upgradeLabel == null || upgradeButton == null)
             return;
 
-        int sellRefund = _current.GetSellRefund();
-        sellLabel.text = $"Продать (+{sellRefund})";
+        if (!_current.IsBuilderHouse && sellLabel != null)
+        {
+            int sellRefund = _current.GetSellRefund();
+            sellLabel.text = $"Продать (+{sellRefund})";
+        }
 
-        if (_current.CanUpgrade)
+        if (_current.CanUpgradeUnlocked(out string blockedByBuilder))
         {
             int upCost = _current.GetUpgradeCost();
             upgradeLabel.text = $"Улучшить ({upCost})";
@@ -274,7 +222,7 @@ public class TowerContextPanel : MonoBehaviour
         }
         else
         {
-            upgradeLabel.text = "Макс. уровень";
+            upgradeLabel.text = string.IsNullOrEmpty(blockedByBuilder) ? "Макс. уровень" : blockedByBuilder;
             upgradeButton.interactable = false;
         }
     }
@@ -282,6 +230,8 @@ public class TowerContextPanel : MonoBehaviour
     void OnSellClicked()
     {
         if (_current == null)
+            return;
+        if (_current.IsBuilderHouse)
             return;
         Tower t = _current;
         Close();
@@ -313,7 +263,31 @@ public class TowerContextPanel : MonoBehaviour
             return;
         _current.TryUpgrade();
         RefreshLabels();
-        PositionNearMouse();
+        PositionNearTower();
+    }
+
+    void ApplyCurrentButtonsVisibility()
+    {
+        if (_current == null || sellButton == null || panelRoot == null)
+            return;
+
+        bool showSell = !_current.IsBuilderHouse;
+        sellButton.gameObject.SetActive(showSell);
+        panelRoot.sizeDelta = showSell ? new Vector2(200f, 88f) : new Vector2(200f, 48f);
+    }
+
+    void PositionNearTower()
+    {
+        if (_current == null)
+            return;
+
+        Camera cam = GetGameViewCamera();
+        if (cam == null)
+            return;
+
+        Vector3 world = _current.transform.position;
+        Vector2 towerScreen = RectTransformUtility.WorldToScreenPoint(cam, world);
+        PositionNearScreenPoint(towerScreen);
     }
 
     void BuildRuntimeUi()

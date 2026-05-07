@@ -43,7 +43,7 @@ public class TowerPlacer : MonoBehaviour
                 TowerContextPanel.EnsureExists();
                 Tower under = GetTowerUnderMouse();
                 if (under != null)
-                    TowerContextPanel.ShowForTower(under);
+                    TowerContextPanel.ShowForTowerAtScreenPosition(under, Input.mousePosition);
                 else
                     TowerContextPanel.HidePanel();
             }
@@ -143,6 +143,8 @@ public class TowerPlacer : MonoBehaviour
         foreach (var c in hits)
         {
             Tower t = c.GetComponent<Tower>();
+            if (t == null)
+                t = c.GetComponentInParent<Tower>();
             if (t == null) continue;
             float d = Vector2.Distance(w, t.transform.position);
             if (d < bestDist)
