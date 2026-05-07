@@ -4321,6 +4321,18 @@ MonoBehaviour:
     icon: {fileID: 0}
     cursorIcon: {fileID: 0}
     cursorHotspot: {x: 0, y: 0}
+  - displayName: Poison
+    towerPrefab: {fileID: 539710460538733160, guid: 481099537bf87a64bae5356441fecde2, type: 3}
+    cost: 60
+    icon: {fileID: 0}
+    cursorIcon: {fileID: 0}
+    cursorHotspot: {x: 0, y: 0}
+  - displayName: LIght Tower
+    towerPrefab: {fileID: 539710460538733160, guid: d0f0a74f8f9224a4eac2b6872950e1f9, type: 3}
+    cost: 60
+    icon: {fileID: 0}
+    cursorIcon: {fileID: 0}
+    cursorHotspot: {x: 0, y: 0}
   buttonsRoot: {fileID: 679782056}
   buttonPrefab: {fileID: 0}
 --- !u!1 &2099971820
